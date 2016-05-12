@@ -1,4 +1,4 @@
-package shauku.neuronal;
+package shauku.network;
 
 import java.util.ArrayList;
 
@@ -9,8 +9,8 @@ public class Neuron {
     private float threshold;
     private boolean fired;
 
-    public Neuron (float t) {
-        threshold = t;
+    public Neuron (float threshold) {
+        this.threshold = threshold;
         fired = false;
         inputs = new ArrayList<>();
         float tmpWeight = (float) Math.random();

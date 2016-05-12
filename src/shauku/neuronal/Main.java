@@ -2,6 +2,8 @@ package shauku.neuronal;
 
 //import java.lang.Math;
 
+import shauku.network.Neuron;
+
 public class Main {
 
     public static void main(String[] args) {
