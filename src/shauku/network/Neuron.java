@@ -1,6 +1,7 @@
 package shauku.network;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Neuron {
 
@@ -20,6 +21,10 @@ public class Neuron {
 
     public void connect (Neuron ... ns) {
         for (Neuron n : ns) inputs.add(n);
+    }
+
+    public void connect (List<Neuron> ns) {
+        inputs.addAll(ns);
     }
 
     public void setWeight (float newWeight) {
@@ -55,5 +60,9 @@ public class Neuron {
 
     public boolean isFired () {
         return fired;
+    }
+
+    private double sigmoid(double value){
+        return 1 / (1+Math.pow(Math.E, (-1*value)));
     }
 }
