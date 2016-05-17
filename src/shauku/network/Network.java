@@ -1,11 +1,6 @@
 package shauku.network;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-
-/**
- * Created by Dani on 12/05/2016.
- */
 public class Network {
 
     private ArrayList<Neuron> inList;
@@ -55,11 +50,34 @@ public class Network {
         System.out.println("Network online!");
     }
 
+    public void feed(Double[] data) {
+        if (data.length == inList.size()){
+            for (int x = 0; x<data.length; x++) {
+                Neuron n = inList.get(x);
+                n.feed(data[x]);
+            }
+        } else {
+            System.out.println("ERROR: Data length is different from input neurons");
+        }
+    }
+
     public void train(){
 
     }
 
     public void start() {
 
+    }
+
+    public ArrayList<Neuron> getInList() {
+        return inList;
+    }
+
+    public ArrayList<Neuron> getOutList() {
+        return outList;
+    }
+
+    public ArrayList<ArrayList<Neuron>> getHidLayers() {
+        return hidLayers;
     }
 }
