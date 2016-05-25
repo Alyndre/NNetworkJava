@@ -9,8 +9,10 @@ public class Neuron {
     private float threshold;
     private boolean fired;
     private double data;
+    private double output;
 
     public Neuron (float threshold) {
+        this.output = 0.0d;
         this.data = 0.0d;
         this.threshold = threshold;
         fired = false;
@@ -33,14 +35,13 @@ public class Neuron {
     public double fire () {
         if (inputs.size() > 0) {
             double totalInput = 0.0;
-            double totalOutput;
             for (Connection c : inputs){
                 totalInput += (c.getInput().fire() * c.getWeight());
             }
 
-            totalOutput = sigmoid(totalInput);
+            output = sigmoid(totalInput);
             fired = true;
-            return totalOutput;
+            return output;
         }
         else {
             fired = true;
@@ -54,5 +55,13 @@ public class Neuron {
 
     private double sigmoid(double value){
         return 1 / (1+Math.pow(Math.E, (-1*value)));
+    }
+
+    public double getOutput() {
+        return output;
+    }
+
+    public void setOutput(double output) {
+        this.output = output;
     }
 }

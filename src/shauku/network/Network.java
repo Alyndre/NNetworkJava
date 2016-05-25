@@ -46,7 +46,7 @@ public class Network {
         System.out.println("Creating output layer...");
         for (int i = 0; i < outputs; i++){
             Neuron n = new Neuron(0f);
-            n.connect(hidLayers.get(hidLayers.size()));
+            n.connect(hidLayers.get(hidLayers.size()-1));
             outList.add(n);
         }
         System.out.println("Output layer created!");
@@ -65,20 +65,43 @@ public class Network {
         }
     }
 
-    public void train(double[][] data, double[] expected){
-
+    public void train(double[][] trainData, double[] expected, int iterations){
+        System.out.println("Training network...");
+        if ((expected.length == trainData.length)&&(iterations>0)) {
+            for (int j = 0; j<=iterations; j++) {
+                System.out.println("Iteration num:" + j);
+                for (int i = 0; i < trainData.length; i++) {
+                    System.out.println("Train set num:" + i);
+                    feed(trainData[i]);
+                    for (Neuron n : outList){
+                        double v = n.fire();
+                        double errorRate = calcError(v, expected[i]);
+                        System.out.println("Error rate: " + errorRate);
+                        //TODO: Backpropagate the error rate and change weights of connections
+                    }
+                }
+            }
+        }
+        System.out.println("Training done!");
     }
 
     public void start() {
+        System.out.println("");
         outList.stream().map(Neuron::fire).forEach(v -> System.out.println("Neuron output: " + v));
     }
 
     public void saveNet() {
-
+        System.out.println("Saving...");
+        //TODO: Save all the network params in a BBDD or something
     }
 
     public void loadNet(long netId) {
+        System.out.println("Loading network " + netId);
+        //TODO: Load a previously saved network
+    }
 
+    private double calcError(double output, double expected){
+        return expected - output;
     }
 
     public ArrayList<Neuron> getInList() {
