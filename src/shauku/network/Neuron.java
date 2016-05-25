@@ -45,6 +45,7 @@ public class Neuron {
         }
         else {
             fired = true;
+            output = data;
             return data;
         }
     }
