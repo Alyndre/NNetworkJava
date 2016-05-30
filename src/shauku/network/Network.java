@@ -65,7 +65,7 @@ public class Network {
         }
     }
 
-    public void train(double[][] trainData, double[] expected, int iterations){
+    public void train(double[][] trainData, double[][] expected, int iterations){
         System.out.println("Training network...");
         if ((expected.length == trainData.length)&&(iterations>0)) {
             for (int j = 0; j<=iterations; j++) {
@@ -73,12 +73,15 @@ public class Network {
                 for (int i = 0; i < trainData.length; i++) {
                     System.out.println("Train set num:" + i);
                     feed(trainData[i]);
-                    for (Neuron n : outList){
-                        double v = n.fire();
-                        double errorRate = calcError(v, expected[i]);
+                    double totalError = 0;
+                    for (int x = 0; x<outList.size(); x++) {
+                        Neuron n = outList.get(x);
+                        n.fire();
+                        double errorRate = n.calcError(expected[i][x]);
                         System.out.println("Error rate: " + errorRate);
-                        //TODO: Backpropagate the error rate and change weights of connections
+                        totalError += errorRate;
                     }
+                    //TODO: Backpropagate the error rate and change weights of connections
                 }
             }
         }
@@ -98,10 +101,6 @@ public class Network {
     public void loadNet(long netId) {
         System.out.println("Loading network " + netId);
         //TODO: Load a previously saved network
-    }
-
-    private double calcError(double output, double expected){
-        return expected - output;
     }
 
     public ArrayList<Neuron> getInList() {

@@ -21,7 +21,7 @@ public class Main {
                 {1, 1}
         };
 
-        double[] expected = {0, 1, 1, 0};
+        double[][] expected = {{0, 1, 1, 0}};
 
         Network net = new Network(inputs, outputs, hidden, learnRate);
         net.train(data, expected, 5);
