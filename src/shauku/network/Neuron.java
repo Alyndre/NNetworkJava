@@ -51,7 +51,7 @@ public class Neuron {
     }
 
     public double calcError(double expected){
-        return Math.pow(expected - output, 2)/2;
+        return expected - output;
     }
     public boolean isFired () {
         return fired;
