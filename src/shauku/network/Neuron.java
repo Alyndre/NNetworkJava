@@ -53,6 +53,7 @@ public class Neuron {
     public double calcError(double expected){
         return expected - output;
     }
+
     public boolean isFired () {
         return fired;
     }
@@ -62,10 +63,16 @@ public class Neuron {
     }
 
     public double getOutput() {
-        return output;
+        if (fired) {
+            return output;
+        } else {
+            return fire();
+        }
     }
 
     public void setOutput(double output) {
         this.output = output;
     }
+
+    public ArrayList<Connection> getInputs() { return inputs; }
 }

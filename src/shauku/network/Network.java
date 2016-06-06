@@ -6,7 +6,8 @@ public class Network {
     private ArrayList<Neuron> inList;
     private ArrayList<Neuron> outList;
     private ArrayList<ArrayList<Neuron>> hidLayers;
-    private float learnRate;
+    private float learningRate;
+    private float momentum = 1;
 
     public Network(long inputs, long outputs, long[] hidden, float learnRate){
         System.out.println("Assembling network...");
@@ -15,8 +16,8 @@ public class Network {
         inList = new ArrayList<>();
         outList = new ArrayList<>();
 
-        System.out.println("Learning rate of: " + this.learnRate);
-        this.learnRate = learnRate;
+        System.out.println("Learning rate of: " + this.learningRate);
+        this.learningRate = learnRate;
 
         System.out.println("Creating input layer...");
         for (Long i = 0L; i < inputs; i++){
@@ -73,19 +74,70 @@ public class Network {
                 for (int i = 0; i < trainData.length; i++) {
                     System.out.println("Train set num:" + i);
                     feed(trainData[i]);
-                    double totalError = 0;
-                    for (int x = 0; x<outList.size(); x++) {
-                        Neuron n = outList.get(x);
-                        n.fire();
-                        double errorRate = n.calcError(expected[i][x]);
-                        System.out.println("Error rate: " + errorRate);
-                        totalError += errorRate;
-                    }
-                    //TODO: Backpropagate the error rate and change weights of connections
+                    backpropagation(expected[i]);
                 }
             }
         }
         System.out.println("Training done!");
+    }
+
+    private void backpropagation(double[] expected){
+
+        //TODO: Backpropagate the error rate and change weights of connections
+
+        //Start Backpropagation on the output layer
+        int i = 0;
+        for (Neuron n : outList) {
+            ArrayList<Connection> connections = n.getInputs();
+            for (Connection con : connections) {
+                double output = n.getOutput(); //ak
+                double iNeuronOutput = con.getInput().getOutput();  //ai
+                double expectedOutput = expected[i]; //desired
+                double errorRate = n.calcError(expectedOutput);
+                System.out.println("Error rate of output neuron n" + i + ": " + errorRate);
+                double partialDerivative = -output * (1 - output) * iNeuronOutput
+                        * errorRate;
+                double deltaWeight = -learningRate * partialDerivative;
+                double newWeight = con.getWeight() + deltaWeight;
+                con.setDeltaWeight(deltaWeight);
+                con.setWeight(newWeight + momentum * con.getPrevDeltaWeight());
+            }
+            i++;
+        }
+
+        //Next we backpropagate on every hidden layer
+        for (ArrayList<Neuron> hiddenLayer : hidLayers) {
+            for (Neuron n : hiddenLayer) {
+                ArrayList<Connection> connections = n.getInputs();
+                for (Connection cn : connections) {
+
+                }
+            }
+        }
+
+        for (Neuron n : hiddenLayer) {
+            ArrayList<Connection> connections = n.getAllInConnections();
+            for (Connection con : connections) {
+                double aj = n.getOutput();
+                double ai = con.leftNeuron.getOutput();
+                double sumKoutputs = 0;
+                int j = 0;
+                for (Neuron out_neu : outputLayer) {
+                    double wjk = out_neu.getConnection(n.id).getWeight();
+                    double desiredOutput = (double) expectedOutput[j];
+                    double ak = out_neu.getOutput();
+                    j++;
+                    sumKoutputs = sumKoutputs
+                            + (-(desiredOutput - ak) * ak * (1 - ak) * wjk);
+                }
+
+                double partialDerivative = aj * (1 - aj) * ai * sumKoutputs;
+                double deltaWeight = -learningRate * partialDerivative;
+                double newWeight = con.getWeight() + deltaWeight;
+                con.setDeltaWeight(deltaWeight);
+                con.setWeight(newWeight + momentum * con.getPrevDeltaWeight());
+            }
+        }
     }
 
     public void start() {
