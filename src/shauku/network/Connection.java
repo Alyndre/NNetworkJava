@@ -2,13 +2,13 @@ package shauku.network;
 
 public class Connection {
 
+    private int id;
     private Neuron input;
     private Neuron output;
     private double weight;
-    private double deltaWeight = 0;
-    private double prevDeltaWeight = 0;
 
-    public Connection(Neuron input, Neuron output, double weight){
+    public Connection(Neuron input, Neuron output, double weight, int id){
+        this.id = id;
         this.input = input;
         this.output = output;
         this.weight = weight;
@@ -38,20 +38,7 @@ public class Connection {
         this.weight = weight;
     }
 
-    public double getDeltaWeight() {
-        return deltaWeight;
-    }
+    public int getId(){ return id; }
 
-    public void setDeltaWeight(double deltaWeight) {
-        prevDeltaWeight = this.deltaWeight;
-        this.deltaWeight = deltaWeight;
-    }
-
-    public double getPrevDeltaWeight() {
-        return prevDeltaWeight;
-    }
-
-    public void setPrevDeltaWeight(double prevDeltaWeight) {
-        this.prevDeltaWeight = prevDeltaWeight;
-    }
+    public void setId(int id) { this.id = id; }
 }

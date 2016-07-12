@@ -12,6 +12,7 @@ public class Network {
     public Network(long inputs, long outputs, long[] hidden, float learnRate){
         System.out.println("Assembling network...");
 
+        int id = 0;
         hidLayers = new ArrayList<>();
         inList = new ArrayList<>();
         outList = new ArrayList<>();
@@ -21,7 +22,8 @@ public class Network {
 
         System.out.println("Creating input layer...");
         for (Long i = 0L; i < inputs; i++){
-            Neuron n = new Neuron(0f);
+            id++;
+            Neuron n = new Neuron(0f, id);
             inList.add(n);
         }
         System.out.println("Input layer created!");
@@ -32,7 +34,8 @@ public class Network {
             long l = hidden[x];
             ArrayList<Neuron> layer = new ArrayList<>();
             for (long i = 0L; i<l; i++){
-                Neuron n = new Neuron(0f);
+                id++;
+                Neuron n = new Neuron(0f, id);
                 if (x==0){
                     n.connect(inList);
                 } else {
@@ -46,7 +49,8 @@ public class Network {
 
         System.out.println("Creating output layer...");
         for (int i = 0; i < outputs; i++){
-            Neuron n = new Neuron(0f);
+            id++;
+            Neuron n = new Neuron(0f, id);
             n.connect(hidLayers.get(hidLayers.size()-1));
             outList.add(n);
         }
@@ -85,59 +89,7 @@ public class Network {
 
         //TODO: Backpropagate the error rate and change weights of connections
 
-        //Start Backpropagation on the output layer
-        int i = 0;
-        for (Neuron n : outList) {
-            ArrayList<Connection> connections = n.getInputs();
-            for (Connection con : connections) {
-                double output = n.getOutput(); //ak
-                double iNeuronOutput = con.getInput().getOutput();  //ai
-                double expectedOutput = expected[i]; //desired
-                double errorRate = n.calcError(expectedOutput);
-                System.out.println("Error rate of output neuron n" + i + ": " + errorRate);
-                double partialDerivative = -output * (1 - output) * iNeuronOutput
-                        * errorRate;
-                double deltaWeight = -learningRate * partialDerivative;
-                double newWeight = con.getWeight() + deltaWeight;
-                con.setDeltaWeight(deltaWeight);
-                con.setWeight(newWeight + momentum * con.getPrevDeltaWeight());
-            }
-            i++;
-        }
 
-        //Next we backpropagate on every hidden layer
-        for (ArrayList<Neuron> hiddenLayer : hidLayers) {
-            for (Neuron n : hiddenLayer) {
-                ArrayList<Connection> connections = n.getInputs();
-                for (Connection cn : connections) {
-
-                }
-            }
-        }
-
-        for (Neuron n : hiddenLayer) {
-            ArrayList<Connection> connections = n.getAllInConnections();
-            for (Connection con : connections) {
-                double aj = n.getOutput();
-                double ai = con.leftNeuron.getOutput();
-                double sumKoutputs = 0;
-                int j = 0;
-                for (Neuron out_neu : outputLayer) {
-                    double wjk = out_neu.getConnection(n.id).getWeight();
-                    double desiredOutput = (double) expectedOutput[j];
-                    double ak = out_neu.getOutput();
-                    j++;
-                    sumKoutputs = sumKoutputs
-                            + (-(desiredOutput - ak) * ak * (1 - ak) * wjk);
-                }
-
-                double partialDerivative = aj * (1 - aj) * ai * sumKoutputs;
-                double deltaWeight = -learningRate * partialDerivative;
-                double newWeight = con.getWeight() + deltaWeight;
-                con.setDeltaWeight(deltaWeight);
-                con.setWeight(newWeight + momentum * con.getPrevDeltaWeight());
-            }
-        }
     }
 
     public void start() {
