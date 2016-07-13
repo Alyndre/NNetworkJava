@@ -1,11 +1,15 @@
 package shauku.network;
 
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
+
 public class Network {
 
-    private ArrayList<Neuron> inList;
-    private ArrayList<Neuron> outList;
-    private ArrayList<ArrayList<Neuron>> hidLayers;
+    private ArrayList<Neuron> inputList;
+    private ArrayList<Neuron> outputList;
+    private ArrayList<ArrayList<Neuron>> hiddenLayers;
     private float learningRate;
     private float momentum = 1;
 
@@ -13,9 +17,9 @@ public class Network {
         System.out.println("Assembling network...");
 
         int id = 0;
-        hidLayers = new ArrayList<>();
-        inList = new ArrayList<>();
-        outList = new ArrayList<>();
+        hiddenLayers = new ArrayList<>();
+        inputList = new ArrayList<>();
+        outputList = new ArrayList<>();
 
         System.out.println("Learning rate of: " + this.learningRate);
         this.learningRate = learnRate;
@@ -23,8 +27,8 @@ public class Network {
         System.out.println("Creating input layer...");
         for (Long i = 0L; i < inputs; i++){
             id++;
-            Neuron n = new Neuron(0f, id);
-            inList.add(n);
+            Neuron n = new Neuron(0d, id);
+            inputList.add(n);
         }
         System.out.println("Input layer created!");
 
@@ -35,24 +39,24 @@ public class Network {
             ArrayList<Neuron> layer = new ArrayList<>();
             for (long i = 0L; i<l; i++){
                 id++;
-                Neuron n = new Neuron(0f, id);
+                Neuron n = new Neuron(0d, id);
                 if (x==0){
-                    n.connect(inList);
+                    n.connect(inputList);
                 } else {
-                    n.connect(hidLayers.get(x-1));
+                    n.connect(hiddenLayers.get(x-1));
                 }
                 layer.add(n);
             }
-            hidLayers.add(layer);
+            hiddenLayers.add(layer);
         }
         System.out.println("Hidden layers created!");
 
         System.out.println("Creating output layer...");
         for (int i = 0; i < outputs; i++){
             id++;
-            Neuron n = new Neuron(0f, id);
-            n.connect(hidLayers.get(hidLayers.size()-1));
-            outList.add(n);
+            Neuron n = new Neuron(0d, id);
+            n.connect(hiddenLayers.get(hiddenLayers.size()-1));
+            outputList.add(n);
         }
         System.out.println("Output layer created!");
 
@@ -60,9 +64,9 @@ public class Network {
     }
 
     public void feed(double[] data) {
-        if (data.length == inList.size()){
+        if (data.length == inputList.size()){
             for (int x = 0; x<data.length; x++) {
-                Neuron n = inList.get(x);
+                Neuron n = inputList.get(x);
                 n.feed(data[x]);
             }
         } else {
@@ -72,14 +76,15 @@ public class Network {
 
     public void train(double[][] trainData, double[][] expected, int iterations){
         System.out.println("Training network...");
-        if ((expected.length == trainData.length)&&(iterations>0)) {
-            for (int j = 0; j<=iterations; j++) {
+        if ((expected.length == trainData.length) && (iterations>0)) {
+            for (int j = 0; j<iterations; j++) {
                 System.out.println("Iteration num:" + j);
                 for (int i = 0; i < trainData.length; i++) {
                     System.out.println("Train set num:" + i);
                     feed(trainData[i]);
                     backpropagation(expected[i]);
                 }
+                shuffleTrainSet(trainData, expected);
             }
         }
         System.out.println("Training done!");
@@ -89,12 +94,72 @@ public class Network {
 
         //TODO: Backpropagate the error rate and change weights of connections
 
+        //SOMETHING IS WRONG: CHECK https://mattmazur.com/2015/03/17/a-step-by-step-backpropagation-example/
+
+        //Feedfoward
+        outputList.stream().forEach((n)-> {
+            n.fire();
+        });
+
+        //Output layer
+        int x = 0;
+        for (Neuron n : outputList){
+            double oK = n.getOutput();
+            double eK = n.calcError(expected[x]);
+            double derivativeK = oK*(1-oK)*eK;
+            n.setDerivative(derivativeK);
+            x++;
+        }
+
+        for (int i = hiddenLayers.size()-1; i >= 0; i--){
+            ArrayList<Neuron> l = hiddenLayers.get(i);
+            for (Neuron n : l) {
+                //Calculate the sum of the delta of the neurons of next layer times weight of that connection
+                double sumK = 0;
+                ArrayList<Neuron> nextLayer;
+                if (i+1 == hiddenLayers.size()){
+                    nextLayer = outputList;
+                } else {
+                    nextLayer = hiddenLayers.get(i+1);
+                }
+                for (Neuron nL : nextLayer){
+                    sumK += nL.getDerivative() * nL.getInputs().get(n.id).getWeight();
+                }
+                double oJ = n.getOutput();
+                double derivativeJ = oJ * (1 - oJ) * sumK;
+                n.setDerivative(derivativeJ);
+            }
+        }
+
+        //Calc deltaWeight
+        for (Neuron n : outputList){
+            for (Map.Entry<Integer, Connection> cEntry : n.getInputs().entrySet()){
+                Connection c = cEntry.getValue();
+                double deltaWeight = -1*learningRate*n.getDerivative()*c.getInput().getOutput();
+                double newWeight = c.getWeight() + deltaWeight;
+                c.setWeight(newWeight);
+            }
+            double deltaBias = -1*learningRate*n.getDerivative();
+        }
+
+        for (int i = hiddenLayers.size()-1; i >= 0; i--) {
+            ArrayList<Neuron> l = hiddenLayers.get(i);
+            for (Neuron n : l) {
+                for (Map.Entry<Integer, Connection> cEntry : n.getInputs().entrySet()){
+                    Connection c = cEntry.getValue();
+                    double deltaWeight = -1*learningRate*n.getDerivative()*c.getInput().getOutput();
+                    double newWeight = c.getWeight() + deltaWeight;
+                    c.setWeight(newWeight);
+                }
+                double deltaBias = -1*learningRate*n.getDerivative();
+            }
+        }
 
     }
 
     public void start() {
-        System.out.println("");
-        outList.stream().map(Neuron::fire).forEach(v -> System.out.println("Neuron output: " + v));
+        System.out.println("Started!");
+        outputList.stream().map(Neuron::fire).forEach(v -> System.out.println("Neuron output: " + v));
     }
 
     public void saveNet() {
@@ -107,15 +172,37 @@ public class Network {
         //TODO: Load a previously saved network
     }
 
-    public ArrayList<Neuron> getInList() {
-        return inList;
+    public void clean() {
+        //TODO: Clean all data of the network
     }
 
-    public ArrayList<Neuron> getOutList() {
-        return outList;
+    public ArrayList<Neuron> getInputList() {
+        return inputList;
     }
 
-    public ArrayList<ArrayList<Neuron>> getHidLayers() {
-        return hidLayers;
+    public ArrayList<Neuron> getOutputList() {
+        return outputList;
+    }
+
+    public ArrayList<ArrayList<Neuron>> getHiddenLayers() {
+        return hiddenLayers;
+    }
+
+    private static void shuffleTrainSet(double[][] trainData, double[][] expected)
+    {
+        // If running on Java 6 or older, use `new Random()` on RHS here
+        Random rnd = ThreadLocalRandom.current();
+        for (int i = trainData.length - 1; i > 0; i--)
+        {
+            int index = rnd.nextInt(i + 1);
+            // Simple swap
+            double[] t = trainData[index];
+            trainData[index] = trainData[i];
+            trainData[i] = t;
+
+            double[] e = expected[index];
+            expected[index] = expected[i];
+            expected[i] = e;
+        }
     }
 }

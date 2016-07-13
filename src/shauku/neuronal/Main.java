@@ -10,9 +10,9 @@ public class Main {
     public static void main(String[] args) {
         long inputs = 2L;
         long outputs = 1L;
-        long[] hidden = {4L};
+        long[] hidden = {2L};
 
-        float learnRate = 0.25f;
+        float learnRate = 0.1f;
 
         double[][] data = {
                 {0, 0},
@@ -21,11 +21,15 @@ public class Main {
                 {1, 1}
         };
 
-        double[][] expected = {{0, 1, 1, 0}};
+        double[][] expected = {{0}, {1}, {1}, {0}};
 
         Network net = new Network(inputs, outputs, hidden, learnRate);
-        net.train(data, expected, 5);
-        //net.feed(data[0]);
-        net.start();
+        net.train(data, expected, 300000);
+
+        for (double[] d : data){
+            System.out.println(d[0]+","+d[1]);
+            net.feed(d);
+            net.start();
+        }
     }
 }

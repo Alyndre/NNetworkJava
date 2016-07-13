@@ -7,8 +7,7 @@ public class Connection {
     private Neuron output;
     private double weight;
 
-    public Connection(Neuron input, Neuron output, double weight, int id){
-        this.id = id;
+    public Connection(Neuron input, Neuron output, double weight){
         this.input = input;
         this.output = output;
         this.weight = weight;
