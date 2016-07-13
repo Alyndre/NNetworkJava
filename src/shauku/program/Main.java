@@ -1,4 +1,4 @@
-package shauku.neuronal;
+package shauku.program;
 
 import shauku.network.Network;
 
@@ -33,3 +33,5 @@ public class Main {
         }
     }
 }
+
+//PER COMPARAR TOPOLOGIES, ELS PESOS ENTRE AQUESTES AN DE SER LO PUTO IGUAL
