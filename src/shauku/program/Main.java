@@ -1,5 +1,6 @@
 package shauku.program;
 
+import shauku.network.MultiLayerPerceptron;
 import shauku.network.Network;
 
 public class Main {
@@ -23,7 +24,7 @@ public class Main {
 
         double[][] expected = {{0}, {1}, {1}, {0}};
 
-        Network net = new Network(inputs, outputs, hidden, learnRate);
+        Network net = new MultiLayerPerceptron(inputs, outputs, hidden, learnRate);
         net.train(data, expected, 10000);
 
         for (double[] d : data){
