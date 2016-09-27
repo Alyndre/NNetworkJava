@@ -1,5 +1,7 @@
 package shauku.program;
 
+import shauku.data.Data;
+import shauku.data.XORData;
 import shauku.network.MultiLayerPerceptron;
 import shauku.network.Network;
 
@@ -15,19 +17,13 @@ public class Main {
 
         float learnRate = 0.25f;
 
-        double[][] data = {
-                {0, 0},
-                {0, 1},
-                {1, 0},
-                {1, 1}
-        };
+        Data dataset = new XORData();
 
-        double[][] expected = {{0}, {1}, {1}, {0}};
 
         Network net = new MultiLayerPerceptron(inputs, outputs, hidden, learnRate);
-        net.train(data, expected, 10000);
+        net.train(dataset, 10000);
 
-        for (double[] d : data){
+        for (double[] d : dataset.getData()){
             System.out.println(d[0]+","+d[1]);
             net.feed(d);
             net.start();

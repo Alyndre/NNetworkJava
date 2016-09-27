@@ -1,5 +1,7 @@
 package shauku.network;
 
+import shauku.data.Data;
+
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -79,7 +81,9 @@ public class MultiLayerPerceptron extends Network {
         }
     }
 
-    public void train(double[][] trainData, double[][] expected, int iterations){
+    public void train(Data dataset, int iterations){
+        double[][] trainData = dataset.getData();
+        double[][] expected = dataset.getExpected();
         System.out.println("Training network...");
         if ((expected.length == trainData.length) && (iterations>0)) {
             for (int j = 0; j<iterations; j++) {

@@ -1,5 +1,7 @@
 package shauku.network;
 
+import shauku.data.Data;
+
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -18,7 +20,7 @@ public abstract class Network {
         this.setType(type);
     }
 
-    public abstract void train(double[][] trainData, double[][] expected, int iterations);
+    public abstract void train(Data dataset, int iterations);
 
     public abstract void feed(double[] data);
 
