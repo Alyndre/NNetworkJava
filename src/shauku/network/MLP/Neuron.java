@@ -1,4 +1,6 @@
-package shauku.network;
+package shauku.network.MLP;
+
+import shauku.network.Connection;
 
 import java.util.HashMap;
 import java.util.List;

@@ -1,5 +1,7 @@
 package shauku.network;
 
+import shauku.network.MLP.Neuron;
+
 public class Connection {
 
     private int id;

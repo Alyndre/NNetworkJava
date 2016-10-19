@@ -2,7 +2,7 @@ package shauku.program;
 
 import shauku.data.Data;
 import shauku.data.XORData;
-import shauku.network.MultiLayerPerceptron;
+import shauku.network.MLP.MultiLayerPerceptron;
 import shauku.network.Network;
 
 public class Main {
@@ -18,7 +18,6 @@ public class Main {
         float learnRate = 0.25f;
 
         Data dataset = new XORData();
-
 
         Network net = new MultiLayerPerceptron(inputs, outputs, hidden, learnRate);
         net.train(dataset, 10000);

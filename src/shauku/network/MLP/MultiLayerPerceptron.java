@@ -1,9 +1,13 @@
-package shauku.network;
+package shauku.network.MLP;
 
 import shauku.data.Data;
+import shauku.network.Connection;
+import shauku.network.Network;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class MultiLayerPerceptron extends Network {
 
@@ -169,6 +173,23 @@ public class MultiLayerPerceptron extends Network {
     public void start() {
         System.out.println("Started!");
         outputList.stream().map(Neuron::fire).forEach(v -> System.out.println("Neuron output: " + v));
+    }
+
+    protected static void shuffleTrainSet(double[][] trainData, double[][] expected)
+    {
+        Random rnd = ThreadLocalRandom.current();
+        for (int i = trainData.length - 1; i > 0; i--)
+        {
+            int index = rnd.nextInt(i + 1);
+            // Simple swap
+            double[] t = trainData[index];
+            trainData[index] = trainData[i];
+            trainData[i] = t;
+
+            double[] e = expected[index];
+            expected[index] = expected[i];
+            expected[i] = e;
+        }
     }
 
     public ArrayList<Neuron> getInputList() {

@@ -9,7 +9,7 @@ public abstract class Network {
 
     public enum Type {
         MLP,
-        KOHONEN
+        SOM
     }
 
     private Type type;
@@ -28,23 +28,6 @@ public abstract class Network {
 
     public void drawNetwork(){
 
-    }
-
-    protected static void shuffleTrainSet(double[][] trainData, double[][] expected)
-    {
-        Random rnd = ThreadLocalRandom.current();
-        for (int i = trainData.length - 1; i > 0; i--)
-        {
-            int index = rnd.nextInt(i + 1);
-            // Simple swap
-            double[] t = trainData[index];
-            trainData[index] = trainData[i];
-            trainData[i] = t;
-
-            double[] e = expected[index];
-            expected[index] = expected[i];
-            expected[i] = e;
-        }
     }
 
     public void saveNet() {
