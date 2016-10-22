@@ -3,9 +3,9 @@ package shauku.network.SOM;
 import shauku.data.Data;
 import shauku.network.Network;
 
-public class SelfOrganizedMap extends Network {
+public class SelfOrganizingMap extends Network {
 
-    public SelfOrganizedMap() {
+    public SelfOrganizingMap() {
         super(Type.SOM);
     }
 
