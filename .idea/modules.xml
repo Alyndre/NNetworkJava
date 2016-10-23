@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/NNetwork.iml" filepath="$PROJECT_DIR$/NNetwork.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/NNetwork.iml" filepath="$PROJECT_DIR$/.idea/modules/NNetwork.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/NNetwork_main.iml" filepath="$PROJECT_DIR$/.idea/modules/NNetwork_main.iml" group="NNetwork" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/NNetwork_test.iml" filepath="$PROJECT_DIR$/.idea/modules/NNetwork_test.iml" group="NNetwork" />
     </modules>
   </component>
 </project>
