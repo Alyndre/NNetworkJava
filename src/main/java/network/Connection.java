@@ -1,6 +1,6 @@
-package shauku.network;
+package network;
 
-import shauku.network.MLP.Neuron;
+import network.MLP.Neuron;
 
 public class Connection {
 

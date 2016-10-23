@@ -1,7 +1,6 @@
-package shauku.network;
+package network;
 
-import shauku.data.Data;
-
+import data.Data;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 

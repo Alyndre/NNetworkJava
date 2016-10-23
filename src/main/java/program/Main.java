@@ -1,9 +1,9 @@
-package shauku.program;
+package program;
 
-import shauku.data.Data;
-import shauku.data.XORData;
-import shauku.network.MLP.MultiLayerPerceptron;
-import shauku.network.Network;
+import data.Data;
+import data.XORData;
+import network.MLP.MultiLayerPerceptron;
+import network.Network;
 
 public class Main {
 

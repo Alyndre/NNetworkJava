@@ -1,7 +1,7 @@
-package shauku.network.SOM;
+package network.SOM;
 
-import shauku.data.Data;
-import shauku.network.Network;
+import data.Data;
+import network.Network;
 
 public class SelfOrganizingMap extends Network {
 

@@ -1,4 +1,4 @@
-package shauku.data;
+package data;
 
 public class XORData implements Data {
 

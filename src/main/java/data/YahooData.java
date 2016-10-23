@@ -1,4 +1,4 @@
-package shauku.data;
+package data;
 
 public class YahooData implements Data {
 

@@ -1,8 +1,8 @@
-package shauku.network.MLP;
+package network.MLP;
 
-import shauku.data.Data;
-import shauku.network.Connection;
-import shauku.network.Network;
+import data.Data;
+import network.Connection;
+import network.Network;
 
 import java.util.ArrayList;
 import java.util.Map;
