@@ -1,13 +1,12 @@
 package network.MLP;
 
-import network.Connection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Neuron {
+class Neuron {
 
-    public int id = 0;
+    int id = 0;
     private HashMap<Integer, Connection> inputs;
     private double bias;
     private boolean fired;
@@ -17,7 +16,7 @@ public class Neuron {
     private double value;
     private double derivative;
 
-    public Neuron (double bias, int id) {
+    Neuron (double bias, int id) {
         this.id = id;
         this.error = 0.0d;
         this.output = 0.0d;
@@ -28,7 +27,7 @@ public class Neuron {
         inputs = new HashMap<>();
     }
 
-    public void connect (List<Neuron> neurons) {
+    void connect (List<Neuron> neurons) {
         for (Neuron n : neurons) {
             float tmpWeight = (float) Math.random();
             tmpWeight *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
@@ -37,11 +36,11 @@ public class Neuron {
         }
     }
 
-    public void feed (double data) {
+    void feed (double data) {
         this.data = data;
     }
 
-    public double fire () {
+    double fire () {
         if (inputs.size() > 0) {
             double totalInput = 0.0;
             for (Map.Entry<Integer, Connection> cEntry : inputs.entrySet()){
@@ -60,7 +59,7 @@ public class Neuron {
         }
     }
 
-    public double calcError(double target){
+    double calcError(double target){
         error = output - target;
         return error;
     }
@@ -73,7 +72,7 @@ public class Neuron {
         return 1 / (1+Math.pow(Math.E, (-1*value)));
     }
 
-    public double getOutput() {
+    double getOutput() {
         return output;
     }
 
@@ -81,7 +80,7 @@ public class Neuron {
         this.output = output;
     }
 
-    public HashMap<Integer, Connection> getInputs() { return inputs; }
+    HashMap<Integer, Connection> getInputs() { return inputs; }
 
     public void setError(double error) {
         this.error = error;
@@ -89,9 +88,9 @@ public class Neuron {
 
     public double getError() { return error; }
 
-    public void setDerivative(double derivative) { this.derivative = derivative; }
+    void setDerivative(double derivative) { this.derivative = derivative; }
 
-    public double getDerivative() { return derivative; }
+    double getDerivative() { return derivative; }
 
     public void setBias(double bias) { this.bias = bias; }
 

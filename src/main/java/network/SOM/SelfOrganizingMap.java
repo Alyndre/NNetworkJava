@@ -5,7 +5,7 @@ import network.Network;
 
 public class SelfOrganizingMap extends Network {
 
-    public SelfOrganizingMap() {
+    public SelfOrganizingMap(int width, int height) {
         super(Type.SOM);
     }
 

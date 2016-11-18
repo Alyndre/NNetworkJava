@@ -1,8 +1,6 @@
-package network;
+package network.MLP;
 
-import network.MLP.Neuron;
-
-public class Connection {
+class Connection {
 
     private int id;
     private Neuron input;

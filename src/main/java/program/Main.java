@@ -8,6 +8,7 @@ import static spark.Spark.*;
 
 public class Main {
 
+    //localhost:4567/
     //http://www.nnwj.de/forwardpropagation.html
     //http://www.nnwj.de/backpropagation.html
 

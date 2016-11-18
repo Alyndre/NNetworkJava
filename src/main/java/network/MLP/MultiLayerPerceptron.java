@@ -1,7 +1,6 @@
 package network.MLP;
 
 import data.Data;
-import network.Connection;
 import network.Network;
 
 import java.util.ArrayList;
@@ -110,7 +109,7 @@ public class MultiLayerPerceptron extends Network {
         //SOMETHING IS WRONG: CHECK https://mattmazur.com/2015/03/17/a-step-by-step-backpropagation-example/
 
         //Feedfoward
-        outputList.stream().forEach((n)-> {
+        outputList.forEach((n)-> {
             n.fire();
         });
 
@@ -175,7 +174,7 @@ public class MultiLayerPerceptron extends Network {
         outputList.stream().map(Neuron::fire).forEach(v -> System.out.println("Neuron output: " + v));
     }
 
-    protected static void shuffleTrainSet(double[][] trainData, double[][] expected)
+    private static void shuffleTrainSet(double[][] trainData, double[][] expected)
     {
         Random rnd = ThreadLocalRandom.current();
         for (int i = trainData.length - 1; i > 0; i--)
