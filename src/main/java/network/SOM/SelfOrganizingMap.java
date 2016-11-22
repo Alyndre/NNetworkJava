@@ -10,17 +10,7 @@ public class SelfOrganizingMap extends Network {
     }
 
     @Override
-    public void train(Data dataset, int iterations) {
-
-    }
-
-    @Override
-    public void feed(double[] data) {
-
-    }
-
-    @Override
-    public void start() {
-
+    public double[] evaluate(double[] data) {
+        return new double[0];
     }
 }

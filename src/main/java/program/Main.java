@@ -2,7 +2,9 @@ package program;
 
 import data.Data;
 import data.XORData;
+import network.MLP.MLPTrainer;
 import network.MLP.MultiLayerPerceptron;
+import trainer.Trainer;
 import network.Network;
 import static spark.Spark.*;
 
@@ -22,15 +24,15 @@ public class Main {
 
             float learnRate = 0.25f;
 
-            Data dataset = new XORData();
+            Data data = new XORData();
 
-            Network net = new MultiLayerPerceptron(inputs, outputs, hidden, learnRate);
-            net.train(dataset, 10000);
+            Network network = new MultiLayerPerceptron(inputs, outputs, hidden);
+            Trainer trainer = new MLPTrainer((MultiLayerPerceptron) network, learnRate);
+            trainer.train(data, 10000);
 
-            for (double[] d : dataset.getData()){
+            for (double[] d : data.getData()){
                 System.out.println(d[0]+","+d[1]);
-                net.feed(d);
-                net.start();
+                System.out.println("Network eval: " + network.evaluate(d)[0]);
             }
 
             return "Ok";

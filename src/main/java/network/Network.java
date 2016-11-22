@@ -19,11 +19,7 @@ public abstract class Network {
         this.setType(type);
     }
 
-    public abstract void train(Data dataset, int iterations);
-
-    public abstract void feed(double[] data);
-
-    public abstract void start();
+    public abstract double[] evaluate(double[] data);
 
     public void drawNetwork(){
 
