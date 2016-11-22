@@ -1,9 +1,5 @@
 package network;
 
-import data.Data;
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
-
 public abstract class Network {
 
     public enum Type {

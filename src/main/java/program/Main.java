@@ -4,7 +4,7 @@ import data.Data;
 import data.XORData;
 import network.MLP.MLPTrainer;
 import network.MLP.MultiLayerPerceptron;
-import trainer.Trainer;
+import network.Trainer;
 import network.Network;
 import static spark.Spark.*;
 
@@ -17,7 +17,6 @@ public class Main {
     public static void main(String[] args) {
 
         get("/", (request, response) -> {
-
             long inputs = 2L;
             long outputs = 1L;
             long[] hidden = {4L};
@@ -27,8 +26,12 @@ public class Main {
             Data data = new XORData();
 
             Network network = new MultiLayerPerceptron(inputs, outputs, hidden);
-            Trainer trainer = new MLPTrainer((MultiLayerPerceptron) network, learnRate);
-            trainer.train(data, 10000);
+            Trainer trainer = new MLPTrainer((MultiLayerPerceptron) network, learnRate, data, 100);
+            trainer.start();
+
+            while(trainer.running){
+                //Wait until completes training;
+            }
 
             for (double[] d : data.getData()){
                 System.out.println(d[0]+","+d[1]);
@@ -37,8 +40,6 @@ public class Main {
 
             return "Ok";
         });
-
-
     }
 }
 

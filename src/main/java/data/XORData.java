@@ -9,7 +9,7 @@ public class XORData implements Data {
             {1, 1}
     };
 
-    double[][] expected = {{0}, {1}, {1}, {0}};
+    double[][] expected = {{1}, {0}, {0}, {1}};
 
     public XORData() {
     }

@@ -1,25 +1,36 @@
 package network.MLP;
 
 import data.Data;
-import trainer.Trainer;
+import network.Trainer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class MLPTrainer implements Trainer {
+public class MLPTrainer extends Trainer {
 
     private MultiLayerPerceptron multiLayerPerceptron;
+    private Data data;
     private float learningRate;
+    private int iterations;
 
-    public MLPTrainer(MultiLayerPerceptron multiLayerPerceptron, float learningRate){
+    public MLPTrainer(MultiLayerPerceptron multiLayerPerceptron, float learningRate, Data data, int iterations){
+        super();
         this.multiLayerPerceptron = multiLayerPerceptron;
         this.learningRate = learningRate;
+        this.data = data;
+        this.iterations = iterations;
     }
 
     @Override
-    public void train(Data data, int iterations){
+    public void run() {
+        train(data, iterations);
+        running = false;
+    }
+
+    @Override
+    protected void train(Data data, int iterations){
         double[][] trainData = data.getData();
         double[][] expected = data.getExpected();
         System.out.println("Training network...");

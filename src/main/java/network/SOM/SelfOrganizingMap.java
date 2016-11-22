@@ -1,12 +1,24 @@
 package network.SOM;
 
-import data.Data;
 import network.Network;
+import network.Trainer;
 
 public class SelfOrganizingMap extends Network {
 
-    public SelfOrganizingMap(int width, int height) {
+    private Trainer trainer;
+
+    public SelfOrganizingMap(int width, int height, int inputDimensions, Trainer trainer) {
         super(Type.SOM);
+        System.out.println("Assembling network...");
+        System.out.println("Type of network: " + this.getType());
+
+        System.out.println("Creating matrix...");
+
+        Matrix matrix = new Matrix(width, height, inputDimensions);
+
+        System.out.println("Matrix created!");
+
+        System.out.println("Network online!");
     }
 
     @Override
