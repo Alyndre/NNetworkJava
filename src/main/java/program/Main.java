@@ -29,9 +29,7 @@ public class Main {
             Trainer trainer = new MLPTrainer((MultiLayerPerceptron) network, learnRate, data, 100);
             trainer.start();
 
-            while(trainer.running){
-                //Wait until completes training;
-            }
+            trainer.join();
 
             for (double[] d : data.getData()){
                 System.out.println(d[0]+","+d[1]);

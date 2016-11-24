@@ -19,4 +19,8 @@ public abstract class Trainer implements Runnable {
         running = true;
         runner.start();
     }
+
+    public void join() throws InterruptedException{
+        runner.join();
+    }
 }
