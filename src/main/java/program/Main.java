@@ -38,6 +38,11 @@ public class Main {
 
             return "Ok";
         });
+
+        get("/mnist", (request, response) -> {
+
+            return "Ok";
+        });
     }
 }
 

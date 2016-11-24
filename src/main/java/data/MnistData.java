@@ -8,6 +8,7 @@ public class MnistData implements Data {
     public MnistData () {
 
     }
+
     @Override
     public void normalizeData() {
 
