@@ -39,8 +39,10 @@ public class IdxReader {
                 if(i % 100 == 0) {System.out.println("Number of images extracted: " + i);}
 
                 for(int p = 0; p < numberOfPixels; p++) {
+                    System.out.println(inImage.read());
                     int gray = 255 - inImage.read();
                     imgPixels[p] = 0xFF000000 | (gray<<16) | (gray<<8) | gray;
+                    System.out.println(imgPixels[p]);
                 }
 
                 image.setRGB(0, 0, numberOfColumns, numberOfRows, imgPixels, 0, numberOfColumns);
@@ -48,9 +50,11 @@ public class IdxReader {
                 int label = inLabel.read();
 
                 hashMap[label]++;
+                /*
                 File outputfile = new File(outputPath + label + "_0" + hashMap[label] + ".png");
 
-                ImageIO.write(image, "png", outputfile);
+                ImageIO.write(image, "png", outputfile);*/
+                break;
             }
 
         } catch (FileNotFoundException e) {
