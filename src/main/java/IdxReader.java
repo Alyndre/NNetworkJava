@@ -38,11 +38,22 @@ public class IdxReader {
 
                 if(i % 100 == 0) {System.out.println("Number of images extracted: " + i);}
 
-                for(int p = 0; p < numberOfPixels; p++) {
-                    System.out.println(inImage.read());
-                    int gray = 255 - inImage.read();
-                    imgPixels[p] = 0xFF000000 | (gray<<16) | (gray<<8) | gray;
-                    System.out.println(imgPixels[p]);
+                for (int row = 0; row < numberOfRows; row++) {
+                    for (int col = 0; col < numberOfColumns; col++) {
+                        int x = inImage.read();
+                        System.out.print((255-x)+" ");
+                        //int gray = 255 - x;
+                        //imgPixels[p] = 0xFF000000 | (gray << 16) | (gray << 8) | gray;
+                    }
+                    System.out.println();
+                }
+
+/*
+                for (int p = 0; p < numberOfPixels; p++) {
+                    int x = inImage.read();
+                    System.out.print(x+" ");
+                    int gray = 255 - x;
+                    imgPixels[p] = 0xFF000000 | (gray << 16) | (gray << 8) | gray;
                 }
 
                 image.setRGB(0, 0, numberOfColumns, numberOfRows, imgPixels, 0, numberOfColumns);
@@ -57,9 +68,7 @@ public class IdxReader {
                 break;
             }
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             if (inImage != null) {
