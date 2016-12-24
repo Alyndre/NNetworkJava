@@ -1,5 +1,7 @@
 package data;
 
+import java.io.IOException;
+
 public class XORData implements Data {
 
     double[][] data = {
@@ -20,6 +22,16 @@ public class XORData implements Data {
     }
 
     @Override
+    public double[] getNextData() throws IOException {
+        return new double[0];
+    }
+
+    @Override
+    public double[] getNextExpected() throws IOException {
+        return new double[0];
+    }
+
+    @Override
     public double[][] getData() {
         return data;
     }
@@ -27,5 +39,10 @@ public class XORData implements Data {
     @Override
     public double[][] getExpected() {
         return expected;
+    }
+
+    @Override
+    public int getTotalData() {
+        return data.length;
     }
 }

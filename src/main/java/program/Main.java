@@ -1,6 +1,7 @@
 package program;
 
 import data.Data;
+import data.MnistData;
 import data.XORData;
 import network.MLP.MLPTrainer;
 import network.MLP.MultiLayerPerceptron;
@@ -15,6 +16,7 @@ public class Main {
     //http://www.nnwj.de/backpropagation.html
 
     public static void main(String[] args) {
+
 
         get("/", (request, response) -> {
             long inputs = 2L;
@@ -39,7 +41,19 @@ public class Main {
             return "Ok";
         });
 
+        MnistData data = new MnistData(10);
+
         get("/mnist", (request, response) -> {
+            long inputs = data.numberOfPixels;
+            long outputs = 10;
+            long[] hidden = {15L};
+            float learnRate = 0.25f;
+
+            Network network = new MultiLayerPerceptron(inputs, outputs, hidden);
+            Trainer trainer = new MLPTrainer((MultiLayerPerceptron) network, learnRate, data, 1);
+
+            trainer.start();
+            trainer.join();
 
             return "Ok";
         });

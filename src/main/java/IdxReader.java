@@ -14,10 +14,6 @@ public class IdxReader {
         String inputImagePath = "src/main/resources/train-images.idx3-ubyte";
         String inputLabelPath = "src/main/resources/train-labels.idx1-ubyte";
 
-        String outputPath = "src/main/resources/";
-
-        int[] hashMap = new int[10];
-
         try {
             inImage = new FileInputStream(inputImagePath);
             inLabel = new FileInputStream(inputLabelPath);
@@ -32,18 +28,24 @@ public class IdxReader {
 
             BufferedImage image = new BufferedImage(numberOfColumns, numberOfRows, BufferedImage.TYPE_INT_ARGB);
             int numberOfPixels = numberOfRows * numberOfColumns;
-            int[] imgPixels = new int[numberOfPixels];
+            int[] imgData = new int[numberOfPixels];
 
             for(int i = 0; i < numberOfImages; i++) {
 
                 if(i % 100 == 0) {System.out.println("Number of images extracted: " + i);}
 
+                int label = inLabel.read();
+                System.out.println("Label: " + label);
+
+                for (int p = 0; p < numberOfPixels; p++) {
+                    int x = inImage.read();
+                    imgData[p] = x;
+                }
+
                 for (int row = 0; row < numberOfRows; row++) {
                     for (int col = 0; col < numberOfColumns; col++) {
                         int x = inImage.read();
                         System.out.print((255-x)+" ");
-                        //int gray = 255 - x;
-                        //imgPixels[p] = 0xFF000000 | (gray << 16) | (gray << 8) | gray;
                     }
                     System.out.println();
                 }
@@ -58,7 +60,7 @@ public class IdxReader {
 
                 image.setRGB(0, 0, numberOfColumns, numberOfRows, imgPixels, 0, numberOfColumns);
 
-                int label = inLabel.read();
+
 
                 hashMap[label]++;
                 /*

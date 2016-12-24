@@ -2,6 +2,8 @@ package network.MLP;
 
 import data.Data;
 import network.Trainer;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -31,19 +33,17 @@ public class MLPTrainer extends Trainer {
 
     @Override
     protected void train(Data data, int iterations){
-        double[][] trainData = data.getData();
-        double[][] expected = data.getExpected();
         System.out.println("Training network...");
-        if ((expected.length == trainData.length) && (iterations>0)) {
+        try {
             for (int j = 0; j<iterations; j++) {
                 System.out.println("Iteration num:" + j);
-                for (int i = 0; i < trainData.length; i++) {
-                    System.out.println("Train set num:" + i);
-                    this.multiLayerPerceptron.evaluate(trainData[i]);
-                    backpropagation(expected[i]);
+                for(int i = 0; i<data.getTotalData(); i++) {
+                    this.multiLayerPerceptron.evaluate(data.getNextData());
+                    backpropagation(data.getNextExpected());
                 }
-                shuffleTrainSet(trainData, expected);
             }
+        } catch (IOException e){
+            System.out.println("Train error: " + e.getMessage());
         }
         System.out.println("Training done!");
     }
@@ -59,6 +59,7 @@ public class MLPTrainer extends Trainer {
         for (Neuron n : outputList){
             double oK = n.getOutput();
             double eK = n.calcError(expected[x]);
+            System.out.println("Actual error rate: " + eK);
             double derivativeK = oK*(1-oK)*eK;
             n.setDerivative(derivativeK);
             x++;
