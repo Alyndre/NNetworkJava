@@ -10,4 +10,5 @@ public interface Data {
     double[][] getData();
     double[][] getExpected();
     int getTotalData();
+    void resetData();
 }

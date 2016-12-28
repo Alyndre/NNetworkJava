@@ -4,6 +4,9 @@ import java.io.IOException;
 
 public class XORData implements Data {
 
+    public int dataCount = 0;
+    public int expectedCount = 0;
+
     double[][] data = {
             {0, 0},
             {0, 1},
@@ -11,7 +14,7 @@ public class XORData implements Data {
             {1, 1}
     };
 
-    double[][] expected = {{1}, {0}, {0}, {1}};
+    double[][] expected = {{1,0}, {0,1}, {0,1}, {1,0}};
 
     public XORData() {
     }
@@ -23,12 +26,16 @@ public class XORData implements Data {
 
     @Override
     public double[] getNextData() throws IOException {
-        return new double[0];
+        double[] res = data[dataCount];
+        dataCount++;
+        return res;
     }
 
     @Override
     public double[] getNextExpected() throws IOException {
-        return new double[0];
+        double[] res = expected[expectedCount];
+        expectedCount++;
+        return res;
     }
 
     @Override
@@ -44,5 +51,11 @@ public class XORData implements Data {
     @Override
     public int getTotalData() {
         return data.length;
+    }
+
+    @Override
+    public void resetData() {
+        dataCount = 0;
+        expectedCount = 0;
     }
 }

@@ -20,22 +20,23 @@ public class Main {
 
         get("/", (request, response) -> {
             long inputs = 2L;
-            long outputs = 1L;
+            long outputs = 2L;
             long[] hidden = {4L};
 
-            float learnRate = 0.25f;
+            float learnRate = 3f;
 
             Data data = new XORData();
 
             Network network = new MultiLayerPerceptron(inputs, outputs, hidden);
-            Trainer trainer = new MLPTrainer((MultiLayerPerceptron) network, learnRate, data, 100);
+            Trainer trainer = new MLPTrainer((MultiLayerPerceptron) network, learnRate, data, 10000);
             trainer.start();
 
             trainer.join();
 
             for (double[] d : data.getData()){
                 System.out.println(d[0]+","+d[1]);
-                System.out.println("Network eval: " + network.evaluate(d)[0]);
+                double[] res = network.evaluate(d);
+                System.out.println("Network eval: " + res[0] + " - " + res[1]);
             }
 
             return "Ok";
@@ -44,10 +45,11 @@ public class Main {
         MnistData data = new MnistData(10);
 
         get("/mnist", (request, response) -> {
+            System.out.println("Number of inputs: " + data.numberOfPixels);
             long inputs = data.numberOfPixels;
             long outputs = 10;
-            long[] hidden = {15L};
-            float learnRate = 0.25f;
+            long[] hidden = {300L};
+            float learnRate = 3f;
 
             Network network = new MultiLayerPerceptron(inputs, outputs, hidden);
             Trainer trainer = new MLPTrainer((MultiLayerPerceptron) network, learnRate, data, 1);
@@ -55,7 +57,7 @@ public class Main {
             trainer.start();
             trainer.join();
 
-            return "Ok";
+            return "Number of inputs: " + data.numberOfPixels;
         });
     }
 }

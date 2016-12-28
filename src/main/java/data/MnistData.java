@@ -5,6 +5,9 @@ import java.io.IOException;
 
 public class MnistData implements Data {
 
+    private final String inputImagePath = "src/main/resources/train-images.idx3-ubyte";
+    private final String inputLabelPath = "src/main/resources/train-labels.idx1-ubyte";
+
     private double[][] data;
     private double[][] expected;
     private FileInputStream inImage = null;
@@ -16,27 +19,7 @@ public class MnistData implements Data {
     private int numOutput = 0;
 
     public MnistData (int numOutput) {
-        String inputImagePath = "src/main/resources/train-images.idx3-ubyte";
-        String inputLabelPath = "src/main/resources/train-labels.idx1-ubyte";
-        try {
-            inImage = new FileInputStream(inputImagePath);
-            inLabel = new FileInputStream(inputLabelPath);
-
-            int magicNumberImages = (inImage.read() << 24) | (inImage.read() << 16) | (inImage.read() << 8) | (inImage.read());
-            numberOfImages = (inImage.read() << 24) | (inImage.read() << 16) | (inImage.read() << 8) | (inImage.read());
-            int numberOfRows = (inImage.read() << 24) | (inImage.read() << 16) | (inImage.read() << 8) | (inImage.read());
-            int numberOfColumns = (inImage.read() << 24) | (inImage.read() << 16) | (inImage.read() << 8) | (inImage.read());
-
-            int magicNumberLabels = (inLabel.read() << 24) | (inLabel.read() << 16) | (inLabel.read() << 8) | (inLabel.read());
-            int numberOfLabels = (inLabel.read() << 24) | (inLabel.read() << 16) | (inLabel.read() << 8) | (inLabel.read());
-
-            numberOfPixels = numberOfRows * numberOfColumns;
-            data = new double[numberOfImages][numberOfPixels];
-            expected = new double[numberOfLabels][numOutput];
-            this.numOutput = numOutput;
-        } catch(Exception e){
-            System.out.println("MnistData error: " + e.getMessage());
-        }
+        prepareData(numOutput);
     }
 
     @Override
@@ -46,7 +29,7 @@ public class MnistData implements Data {
         try {
             for (int p = 0; p < numberOfPixels; p++) {
                 int x = inImage.read();
-                imgData[p] = x;
+                imgData[p] = x/255;
             }
             data[dataCount] = imgData;
             dataCount++;
@@ -91,5 +74,33 @@ public class MnistData implements Data {
     @Override
     public int getTotalData() {
         return numberOfImages;
+    }
+
+    @Override
+    public void resetData() {
+        prepareData(numOutput);
+    }
+
+    private void prepareData(int numOutput) {
+        try {
+            inImage = new FileInputStream(inputImagePath);
+            inLabel = new FileInputStream(inputLabelPath);
+
+            int magicNumberImages = (inImage.read() << 24) | (inImage.read() << 16) | (inImage.read() << 8) | (inImage.read());
+            numberOfImages = (inImage.read() << 24) | (inImage.read() << 16) | (inImage.read() << 8) | (inImage.read());
+            int numberOfRows = (inImage.read() << 24) | (inImage.read() << 16) | (inImage.read() << 8) | (inImage.read());
+            int numberOfColumns = (inImage.read() << 24) | (inImage.read() << 16) | (inImage.read() << 8) | (inImage.read());
+            int magicNumberLabels = (inLabel.read() << 24) | (inLabel.read() << 16) | (inLabel.read() << 8) | (inLabel.read());
+            int numberOfLabels = (inLabel.read() << 24) | (inLabel.read() << 16) | (inLabel.read() << 8) | (inLabel.read());
+
+            numberOfPixels = numberOfRows * numberOfColumns;
+            data = new double[numberOfImages][numberOfPixels];
+            expected = new double[numberOfLabels][numOutput];
+            this.numOutput = numOutput;
+            dataCount = 0;
+            expectedCount = 0;
+        } catch(Exception e){
+            System.out.println("MnistData error: " + e.getMessage());
+        }
     }
 }

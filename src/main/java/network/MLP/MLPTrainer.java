@@ -36,11 +36,12 @@ public class MLPTrainer extends Trainer {
         System.out.println("Training network...");
         try {
             for (int j = 0; j<iterations; j++) {
-                System.out.println("Iteration num:" + j);
-                for(int i = 0; i<data.getTotalData(); i++) {
+                for(int i = 0; i<data.getTotalData(); i++) {//data.getTotalData()
+                    System.out.println("Iteration num:" + j);
                     this.multiLayerPerceptron.evaluate(data.getNextData());
                     backpropagation(data.getNextExpected());
                 }
+                data.resetData();
             }
         } catch (IOException e){
             System.out.println("Train error: " + e.getMessage());
@@ -54,11 +55,18 @@ public class MLPTrainer extends Trainer {
         List<Neuron> outputList = this.multiLayerPerceptron.getOutputList();
         List<ArrayList<Neuron>> hiddenLayers = this.multiLayerPerceptron.getHiddenLayers();
 
+        String exp = "Expected: ";
+        for(double d : expected) {
+            exp+=d+" - ";
+        }
+        System.out.println(exp);
+
         //Output layer
         int x = 0;
         for (Neuron n : outputList){
             double oK = n.getOutput();
             double eK = n.calcError(expected[x]);
+            System.out.println("Actual output: " + oK);
             System.out.println("Actual error rate: " + eK);
             double derivativeK = oK*(1-oK)*eK;
             n.setDerivative(derivativeK);
