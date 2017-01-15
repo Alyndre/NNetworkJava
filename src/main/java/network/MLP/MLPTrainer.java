@@ -33,20 +33,20 @@ public class MLPTrainer extends Trainer {
 
     @Override
     protected void train(Data data, int iterations){
-        System.out.println("Training network...");
+        this.multiLayerPerceptron.log("Training network...");
         try {
             for (int j = 0; j<iterations; j++) {
-                for(int i = 0; i<data.getTotalData(); i++) {//data.getTotalData()
-                    System.out.println("Iteration num:" + j);
+                for(int i = 0; i<data.getTotalData()-1; i++) {//data.getTotalData()
+                    this.multiLayerPerceptron.log("Epoch:" + j);
                     this.multiLayerPerceptron.evaluate(data.getNextData());
                     backpropagation(data.getNextExpected());
                 }
                 data.resetData();
             }
         } catch (IOException e){
-            System.out.println("Train error: " + e.getMessage());
+            this.multiLayerPerceptron.log("Train error: " + e.getMessage());
         }
-        System.out.println("Training done!");
+        this.multiLayerPerceptron.log("Training done!");
     }
 
     private void backpropagation(double[] expected){
@@ -59,15 +59,17 @@ public class MLPTrainer extends Trainer {
         for(double d : expected) {
             exp+=d+" - ";
         }
-        System.out.println(exp);
+        this.multiLayerPerceptron.log(exp);
 
         //Output layer
         int x = 0;
         for (Neuron n : outputList){
             double oK = n.getOutput();
             double eK = n.calcError(expected[x]);
-            System.out.println("Actual output: " + oK);
-            System.out.println("Actual error rate: " + eK);
+            this.multiLayerPerceptron.debug = true;
+            this.multiLayerPerceptron.log("Actual output: " + oK);
+            this.multiLayerPerceptron.debug = false;
+            this.multiLayerPerceptron.log("Actual error rate: " + eK);
             double derivativeK = oK*(1-oK)*eK;
             n.setDerivative(derivativeK);
             x++;

@@ -5,8 +5,8 @@ import java.io.IOException;
 
 public class MnistData implements Data {
 
-    private final String inputImagePath = "src/main/resources/train-images.idx3-ubyte";
-    private final String inputLabelPath = "src/main/resources/train-labels.idx1-ubyte";
+    private String inputImagePath;
+    private String inputLabelPath;
 
     private double[][] data;
     private double[][] expected;
@@ -18,8 +18,25 @@ public class MnistData implements Data {
     private int expectedCount = 0;
     private int numOutput = 0;
 
-    public MnistData (int numOutput) {
+    public MnistData (String inputImagePath, String inputLabelPath, int numOutput) {
+        this.inputImagePath = inputImagePath;
+        this.inputLabelPath = inputLabelPath;
         prepareData(numOutput);
+    }
+
+    public void loadData() {
+        double[] imgData = new double[numberOfPixels];
+        try {
+            for (int i = 0; i < numberOfImages; i++) {
+                for (int p = 0; p < numberOfPixels; p++) {
+                    int x = inImage.read();
+                    imgData[p] = x / 255;
+                }
+                data[i] = imgData;
+            }
+        } catch (IOException e) {
+            System.out.println("getNextData error: " + e.getMessage());
+        }
     }
 
     @Override

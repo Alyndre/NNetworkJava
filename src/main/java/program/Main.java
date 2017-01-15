@@ -42,20 +42,31 @@ public class Main {
             return "Ok";
         });
 
-        MnistData data = new MnistData(10);
+        String inputImagePath = "src/main/resources/train-images.idx3-ubyte";
+        String inputLabelPath = "src/main/resources/train-labels.idx1-ubyte";
+        MnistData data = new MnistData(inputImagePath, inputLabelPath, 10);
+
+        String validateImagePath = "src/main/resources/t10k-images.idx3-ubyte";
+        String validateLabelPath = "src/main/resources/t10k-labels.idx1-ubyte";
+        MnistData validationData = new MnistData(validateImagePath, validateLabelPath, 10);
+        validationData.loadData();
 
         get("/mnist", (request, response) -> {
             System.out.println("Number of inputs: " + data.numberOfPixels);
             long inputs = data.numberOfPixels;
             long outputs = 10;
-            long[] hidden = {300L};
+            long[] hidden = {30L};
             float learnRate = 3f;
 
             Network network = new MultiLayerPerceptron(inputs, outputs, hidden);
-            Trainer trainer = new MLPTrainer((MultiLayerPerceptron) network, learnRate, data, 1);
+            Trainer trainer = new MLPTrainer((MultiLayerPerceptron) network, learnRate, data, 30);
 
             trainer.start();
             trainer.join();
+
+            for (double[] doubles : validationData.getData()) {
+                network.evaluate(doubles);
+            }
 
             return "Number of inputs: " + data.numberOfPixels;
         });

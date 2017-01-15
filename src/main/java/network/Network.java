@@ -8,7 +8,7 @@ public abstract class Network {
     }
 
     private Type type;
-
+    public boolean debug = false;
     private long numNeurons = 0;
 
     public Network(Type type){
@@ -53,5 +53,11 @@ public abstract class Network {
 
     public void setType(Type type) {
         this.type = type;
+    }
+
+    public void log(String message) {
+        if (debug) {
+            System.out.println(message);
+        }
     }
 }

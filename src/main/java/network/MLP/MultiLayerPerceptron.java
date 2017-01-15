@@ -12,8 +12,8 @@ public class MultiLayerPerceptron extends Network {
 
     public MultiLayerPerceptron(long inputs, long outputs, long[] hidden){
         super(Type.MLP);
-        System.out.println("Assembling network...");
-        System.out.println("Type of network: " + this.getType());
+        log("Assembling network...");
+        log("Type of network: " + this.getType());
 
         int id = 0;
         long sumNeurons = 0;
@@ -22,17 +22,17 @@ public class MultiLayerPerceptron extends Network {
         inputList = new ArrayList<>();
         outputList = new ArrayList<>();
 
-        System.out.println("Creating input layer...");
+        log("Creating input layer...");
 
         for (long i = 0L; i < inputs; i++){
             id++;
             Neuron n = new Neuron(0d, id);
             inputList.add(n);
         }
-        System.out.println("Input layer created!");
+        log("Input layer created!");
 
-        System.out.println("Creating hidden layers...");
-        System.out.println("Number of hidden layers: " + hidden.length);
+        log("Creating hidden layers...");
+        log("Number of hidden layers: " + hidden.length);
         for (int x = 0; x<hidden.length; x++){
             long l = hidden[x];
             ArrayList<Neuron> layer = new ArrayList<>();
@@ -48,20 +48,20 @@ public class MultiLayerPerceptron extends Network {
             }
             hiddenLayers.add(layer);
         }
-        System.out.println("Hidden layers created!");
+        log("Hidden layers created!");
 
-        System.out.println("Creating output layer...");
+        log("Creating output layer...");
         for (long i = 0; i < outputs; i++){
             id++;
             Neuron n = new Neuron(0d, id);
             n.connect(hiddenLayers.get(hiddenLayers.size()-1));
             outputList.add(n);
         }
-        System.out.println("Output layer created!");
+        log("Output layer created!");
 
         setNumNeurons(sumNeurons);
 
-        System.out.println("Network online!");
+        log("Network online!");
     }
 
     public double[] evaluate(double[] data){
@@ -76,7 +76,7 @@ public class MultiLayerPerceptron extends Network {
                 results[x] = n.fire();
             }
         } else {
-            System.out.println("ERROR: Data length is different from input neurons");
+            log("ERROR: Data length is different from input neurons");
         }
         return results;
     }
