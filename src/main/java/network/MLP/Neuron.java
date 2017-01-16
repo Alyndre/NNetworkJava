@@ -59,11 +59,6 @@ class Neuron {
         }
     }
 
-    double calcError(double target){
-        error = output - target;
-        return error;
-    }
-
     public boolean isFired () {
         return fired;
     }
@@ -95,4 +90,20 @@ class Neuron {
     public void setBias(double bias) { this.bias = bias; }
 
     public double getBias() { return bias; }
+
+    /*
+    double calcError(double target){
+        //error = output - target;
+        double log1 = Math.log(output);
+        double log2 = Math.log(1-output);
+        if (Double.isNaN(log1)){
+            log1 = 0;
+        }
+        if (Double.isNaN(log2)){
+            log2 = 0;
+        }
+        error = -target*log1-(1-target)*log2;
+        return error;
+    }
+*/
 }

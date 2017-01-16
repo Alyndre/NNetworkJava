@@ -23,20 +23,24 @@ public class Main {
             long outputs = 2L;
             long[] hidden = {4L};
 
-            float learnRate = 3f;
+            float learnRate = 0.25f;
 
             Data data = new XORData();
 
             Network network = new MultiLayerPerceptron(inputs, outputs, hidden);
+            network.debug = true;
             Trainer trainer = new MLPTrainer((MultiLayerPerceptron) network, learnRate, data, 10000);
             trainer.start();
 
             trainer.join();
 
+            int i = 0;
             for (double[] d : data.getData()){
                 System.out.println(d[0]+","+d[1]);
                 double[] res = network.evaluate(d);
+                System.out.println("Expected: " + data.getExpected()[i][0] + " - " + data.getExpected()[i][1]);
                 System.out.println("Network eval: " + res[0] + " - " + res[1]);
+                i++;
             }
 
             return "Ok";
@@ -59,13 +63,17 @@ public class Main {
             float learnRate = 3f;
 
             Network network = new MultiLayerPerceptron(inputs, outputs, hidden);
-            Trainer trainer = new MLPTrainer((MultiLayerPerceptron) network, learnRate, data, 30);
+            Trainer trainer = new MLPTrainer((MultiLayerPerceptron) network, learnRate, data, 5);
 
             trainer.start();
             trainer.join();
 
-            for (double[] doubles : validationData.getData()) {
-                network.evaluate(doubles);
+            for (int i = 0; i < validationData.getData().length; i++){
+                System.out.println("Expected: " + validationData.expectedNumber[i]);
+                double [] res = network.evaluate(validationData.getData()[i]);
+                for (double d : res){
+                    System.out.println("Output: " + d);
+                }
             }
 
             return "Number of inputs: " + data.numberOfPixels;

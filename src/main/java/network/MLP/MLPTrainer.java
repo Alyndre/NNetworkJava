@@ -36,9 +36,11 @@ public class MLPTrainer extends Trainer {
         this.multiLayerPerceptron.log("Training network...");
         try {
             for (int j = 0; j<iterations; j++) {
-                for(int i = 0; i<data.getTotalData()-1; i++) {//data.getTotalData()
-                    this.multiLayerPerceptron.log("Epoch:" + j);
-                    this.multiLayerPerceptron.evaluate(data.getNextData());
+                this.multiLayerPerceptron.log("Epoch:" + j);
+                for(int i = 0; i<data.getTotalData(); i++) {//data.getTotalData()
+                    double[] d = data.getNextData();
+                    this.multiLayerPerceptron.log("Data: " + d[0] + " - " + d[1]);
+                    this.multiLayerPerceptron.evaluate(d);
                     backpropagation(data.getNextExpected());
                 }
                 data.resetData();
@@ -65,12 +67,10 @@ public class MLPTrainer extends Trainer {
         int x = 0;
         for (Neuron n : outputList){
             double oK = n.getOutput();
-            double eK = n.calcError(expected[x]);
-            this.multiLayerPerceptron.debug = true;
+            double eK = calcError(expected[x], oK);
             this.multiLayerPerceptron.log("Actual output: " + oK);
-            this.multiLayerPerceptron.debug = false;
             this.multiLayerPerceptron.log("Actual error rate: " + eK);
-            double derivativeK = oK*(1-oK)*eK;
+            double derivativeK = expected[x] - oK;
             n.setDerivative(derivativeK);
             x++;
         }
@@ -103,7 +103,7 @@ public class MLPTrainer extends Trainer {
                 double newWeight = c.getWeight() + deltaWeight;
                 c.setWeight(newWeight);
             }
-            double deltaBias = -1*learningRate*n.getDerivative();
+            //double deltaBias = -1*learningRate*n.getDerivative();
         }
 
         for (int i = hiddenLayers.size()-1; i >= 0; i--) {
@@ -115,7 +115,7 @@ public class MLPTrainer extends Trainer {
                     double newWeight = c.getWeight() + deltaWeight;
                     c.setWeight(newWeight);
                 }
-                double deltaBias = -1*learningRate*n.getDerivative();
+                //double deltaBias = -1*learningRate*n.getDerivative();
             }
         }
     }
@@ -135,5 +135,20 @@ public class MLPTrainer extends Trainer {
             expected[index] = expected[i];
             expected[i] = e;
         }
+    }
+
+    private double calcError(double target, double output){
+        double error;
+        //error = output - target;
+        double log1 = Math.log(output);
+        double log2 = Math.log(1-output);
+        if (Double.isNaN(log1)){
+            log1 = 0;
+        }
+        if (Double.isNaN(log2)){
+            log2 = 0;
+        }
+        error = -target*log1-(1-target)*log2;
+        return error;
     }
 }

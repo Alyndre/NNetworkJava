@@ -10,6 +10,7 @@ public class MnistData implements Data {
 
     private double[][] data;
     private double[][] expected;
+    public double[] expectedNumber;
     private FileInputStream inImage = null;
     private FileInputStream inLabel = null;
     public int numberOfPixels;
@@ -26,14 +27,21 @@ public class MnistData implements Data {
 
     public void loadData() {
         double[] imgData = new double[numberOfPixels];
+        double[] expected = new double[numOutput];
         try {
             for (int i = 0; i < numberOfImages; i++) {
                 for (int p = 0; p < numberOfPixels; p++) {
                     int x = inImage.read();
                     imgData[p] = x / 255;
                 }
-                data[i] = imgData;
+                this.data[i] = imgData;
+
+                int x = inLabel.read();
+                this.expectedNumber[i] = x;
+                expected[x] = 1;
+                this.expected[i] = expected;
             }
+
         } catch (IOException e) {
             System.out.println("getNextData error: " + e.getMessage());
         }
@@ -41,7 +49,7 @@ public class MnistData implements Data {
 
     @Override
     public double[] getNextData() throws IOException{
-        System.out.println("Data num: " + dataCount);
+        //System.out.println("Data num: " + dataCount);
         double[] imgData = new double[numberOfPixels];
         try {
             for (int p = 0; p < numberOfPixels; p++) {
@@ -62,7 +70,7 @@ public class MnistData implements Data {
         try {
             double[] expected = new double[numOutput];
             int x = inLabel.read();
-            System.out.println("Expected: " + x);
+            //System.out.println("Expected: " + x);
             expected[x] = 1;
             this.expected[expectedCount] = expected;
             expectedCount++;
@@ -113,6 +121,7 @@ public class MnistData implements Data {
             numberOfPixels = numberOfRows * numberOfColumns;
             data = new double[numberOfImages][numberOfPixels];
             expected = new double[numberOfLabels][numOutput];
+            this.expectedNumber = new double[numberOfImages];
             this.numOutput = numOutput;
             dataCount = 0;
             expectedCount = 0;
