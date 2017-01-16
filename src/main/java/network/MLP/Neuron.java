@@ -15,6 +15,7 @@ class Neuron {
     private double error;
     private double value;
     private double derivative;
+    public boolean isOutputUnit = false;
 
     Neuron (double bias, int id) {
         this.id = id;
@@ -48,7 +49,11 @@ class Neuron {
                 totalInput += (c.getInput().fire() * c.getWeight());
             }
             value = totalInput+bias;
-            output = sigmoid(value);
+            if (isOutputUnit) {
+                output = value;
+            } else {
+                output = sigmoid(value);
+            }
             fired = true;
             return output;
         }
@@ -64,7 +69,14 @@ class Neuron {
     }
 
     private double sigmoid(double value){
-        return 1 / (1+Math.pow(Math.E, (-1*value)));
+        return 1 / (1+Math.exp((-1*value)));
+    }
+
+    private double hyperTan(double x)
+    {
+        if (x < -20.0) return -1.0; // approximation is correct to 30 decimals
+        else if (x > 20.0) return 1.0;
+        else return Math.tanh(x);
     }
 
     double getOutput() {

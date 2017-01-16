@@ -70,7 +70,7 @@ public class MLPTrainer extends Trainer {
             double eK = calcError(expected[x], oK);
             this.multiLayerPerceptron.log("Actual output: " + oK);
             this.multiLayerPerceptron.log("Actual error rate: " + eK);
-            double derivativeK = expected[x] - oK;
+            double derivativeK = oK*(1-oK)*eK;//expected[x] - oK;
             n.setDerivative(derivativeK);
             x++;
         }
@@ -139,8 +139,8 @@ public class MLPTrainer extends Trainer {
 
     private double calcError(double target, double output){
         double error;
-        //error = output - target;
-        double log1 = Math.log(output);
+        error = output - target;
+        /*double log1 = Math.log(output);
         double log2 = Math.log(1-output);
         if (Double.isNaN(log1)){
             log1 = 0;
@@ -148,7 +148,7 @@ public class MLPTrainer extends Trainer {
         if (Double.isNaN(log2)){
             log2 = 0;
         }
-        error = -target*log1-(1-target)*log2;
+        error = -target*log1-(1-target)*log2;*/
         return error;
     }
 }

@@ -54,6 +54,7 @@ public class MultiLayerPerceptron extends Network {
         for (long i = 0; i < outputs; i++){
             id++;
             Neuron n = new Neuron(0d, id);
+            n.isOutputUnit = true;
             n.connect(hiddenLayers.get(hiddenLayers.size()-1));
             outputList.add(n);
         }
@@ -78,7 +79,30 @@ public class MultiLayerPerceptron extends Network {
         } else {
             log("ERROR: Data length is different from input neurons");
         }
-        return results;
+        double[] softmaxed = softmax(results);
+        for (int x = 0; x<outputList.size(); x++){
+            Neuron n = outputList.get(x);
+            n.setOutput(softmaxed[x]);
+        }
+        return softmaxed;
+    }
+
+    public double[] softmax (double[] outputs) {
+        // determine max output sum
+        double max = outputs[0];
+        for (int i = 0; i < outputs.length; ++i)
+            if (outputs[i] > max) max = outputs[i];
+
+        // determine scaling factor -- sum of exp(each val - max)
+        double scale = 0.0;
+        for (int i = 0; i < outputs.length; ++i)
+            scale += Math.exp(outputs[i] - max);
+
+        double[] result = new double[outputs.length];
+        for (int i = 0; i < outputs.length; ++i)
+            result[i] = Math.exp(outputs[i] - max) / scale;
+
+        return result; // now scaled so that xi sum to 1.0
     }
 
     ArrayList<Neuron> getInputList() {
