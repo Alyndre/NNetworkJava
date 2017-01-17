@@ -29,7 +29,7 @@ public class Main {
 
             Network network = new MultiLayerPerceptron(inputs, outputs, hidden);
             network.debug = true;
-            Trainer trainer = new MLPTrainer((MultiLayerPerceptron) network, learnRate, data, 10000);
+            Trainer trainer = new MLPTrainer((MultiLayerPerceptron) network, learnRate, data, 100);
             trainer.start();
 
             trainer.join();

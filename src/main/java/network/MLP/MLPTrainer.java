@@ -64,16 +64,20 @@ public class MLPTrainer extends Trainer {
         this.multiLayerPerceptron.log(exp);
 
         //Output layer
+        double sumErr = 0;
         int x = 0;
         for (Neuron n : outputList){
             double oK = n.getOutput();
-            double eK = calcError(expected[x], oK);
+            sumErr += calcError(expected[x], oK);
+            double eK = oK-expected[x]; // oK-expected[x]
             this.multiLayerPerceptron.log("Actual output: " + oK);
             this.multiLayerPerceptron.log("Actual error rate: " + eK);
-            double derivativeK = oK*(1-oK)*eK;//expected[x] - oK;
+            double derivativeK = derivate(oK)*eK;//expected[x] - oK;
             n.setDerivative(derivativeK);
             x++;
         }
+
+        System.out.println("CROSS ENTROPY ERROR: " + sumErr);
 
         for (int i = hiddenLayers.size()-1; i >= 0; i--){
             ArrayList<Neuron> l = hiddenLayers.get(i);
@@ -90,7 +94,7 @@ public class MLPTrainer extends Trainer {
                     sumK += nL.getDerivative() * nL.getInputs().get(n.id).getWeight();
                 }
                 double oJ = n.getOutput();
-                double derivativeJ = oJ * (1 - oJ) * sumK;
+                double derivativeJ = derivate(oJ) * sumK;
                 n.setDerivative(derivativeJ);
             }
         }
@@ -139,8 +143,8 @@ public class MLPTrainer extends Trainer {
 
     private double calcError(double target, double output){
         double error;
-        error = output - target;
-        /*double log1 = Math.log(output);
+        //error = output - target;
+        double log1 = Math.log(output);
         double log2 = Math.log(1-output);
         if (Double.isNaN(log1)){
             log1 = 0;
@@ -148,7 +152,11 @@ public class MLPTrainer extends Trainer {
         if (Double.isNaN(log2)){
             log2 = 0;
         }
-        error = -target*log1-(1-target)*log2;*/
+        error = -target*log1-(1-target)*log2;
         return error;
+    }
+
+    private double derivate(double val){
+        return val * (1 - val);
     }
 }
