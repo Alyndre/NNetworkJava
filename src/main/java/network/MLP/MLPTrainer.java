@@ -64,20 +64,17 @@ public class MLPTrainer extends Trainer {
         this.multiLayerPerceptron.log(exp);
 
         //Output layer
-        double sumErr = 0;
+        double error = 0;
         int x = 0;
         for (Neuron n : outputList){
-            double oK = n.getOutput();
-            sumErr += calcError(expected[x], oK);
-            double eK = oK-expected[x]; // oK-expected[x]
-            this.multiLayerPerceptron.log("Actual output: " + oK);
-            this.multiLayerPerceptron.log("Actual error rate: " + eK);
-            double derivativeK = derivate(oK)*eK;//expected[x] - oK;
-            n.setDerivative(derivativeK);
+            double out = n.getOutput();
+            double g = expected[x]-out;
+            error -= expected[x] * Math.log(out);
+            n.setDerivative(g);
             x++;
         }
 
-        System.out.println("CROSS ENTROPY ERROR: " + sumErr);
+        System.out.println("CROSS ENTROPY ERROR: " + error);
 
         for (int i = hiddenLayers.size()-1; i >= 0; i--){
             ArrayList<Neuron> l = hiddenLayers.get(i);
@@ -103,7 +100,7 @@ public class MLPTrainer extends Trainer {
         for (Neuron n : outputList){
             for (Map.Entry<Integer, Connection> cEntry : n.getInputs().entrySet()){
                 Connection c = cEntry.getValue();
-                double deltaWeight = -1*learningRate*n.getDerivative()*c.getInput().getOutput();
+                double deltaWeight = 1*learningRate*n.getDerivative()*c.getInput().getOutput();
                 double newWeight = c.getWeight() + deltaWeight;
                 c.setWeight(newWeight);
             }
@@ -115,7 +112,7 @@ public class MLPTrainer extends Trainer {
             for (Neuron n : l) {
                 for (Map.Entry<Integer, Connection> cEntry : n.getInputs().entrySet()){
                     Connection c = cEntry.getValue();
-                    double deltaWeight = -1*learningRate*n.getDerivative()*c.getInput().getOutput();
+                    double deltaWeight = 1*learningRate*n.getDerivative()*c.getInput().getOutput();
                     double newWeight = c.getWeight() + deltaWeight;
                     c.setWeight(newWeight);
                 }
