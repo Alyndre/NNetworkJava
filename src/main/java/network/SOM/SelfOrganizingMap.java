@@ -6,6 +6,7 @@ import network.Trainer;
 public class SelfOrganizingMap extends Network {
 
     private Trainer trainer;
+    public Matrix matrix;
 
     public SelfOrganizingMap(int width, int height, int inputDimensions, Trainer trainer) {
         super(Type.SOM);
@@ -14,7 +15,7 @@ public class SelfOrganizingMap extends Network {
 
         System.out.println("Creating matrix...");
 
-        Matrix matrix = new Matrix(width, height, inputDimensions);
+        matrix = new Matrix(width, height, inputDimensions);
 
         System.out.println("Matrix created!");
 
