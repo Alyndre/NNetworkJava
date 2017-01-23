@@ -129,4 +129,9 @@ public class MnistData implements Data {
             System.out.println("MnistData error: " + e.getMessage());
         }
     }
+
+    @Override
+    public void shuffle() {
+
+    }
 }

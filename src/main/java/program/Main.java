@@ -23,13 +23,13 @@ public class Main {
             long outputs = 2L;
             long[] hidden = {4L};
 
-            float learnRate = 0.25f;
+            float learnRate = 0.5f;
 
             Data data = new XORData();
 
             Network network = new MultiLayerPerceptron(inputs, outputs, hidden);
             network.debug = true;
-            Trainer trainer = new MLPTrainer((MultiLayerPerceptron) network, learnRate, data, 10000);
+            Trainer trainer = new MLPTrainer((MultiLayerPerceptron) network, learnRate, data, 1000);
             trainer.start();
 
             trainer.join();
@@ -63,7 +63,7 @@ public class Main {
             float learnRate = 3f;
 
             Network network = new MultiLayerPerceptron(inputs, outputs, hidden);
-            Trainer trainer = new MLPTrainer((MultiLayerPerceptron) network, learnRate, data, 5);
+            Trainer trainer = new MLPTrainer((MultiLayerPerceptron) network, learnRate, data, 5000);
 
             trainer.start();
             trainer.join();

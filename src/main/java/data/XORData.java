@@ -1,6 +1,8 @@
 package data;
 
 import java.io.IOException;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class XORData implements Data {
 
@@ -57,5 +59,23 @@ public class XORData implements Data {
     public void resetData() {
         dataCount = 0;
         expectedCount = 0;
+    }
+
+    @Override
+    public void shuffle()
+    {
+        Random rnd = ThreadLocalRandom.current();
+        for (int i = data.length - 1; i > 0; i--)
+        {
+            int index = rnd.nextInt(i + 1);
+            // Simple swap
+            double[] t = data[index];
+            data[index] = data[i];
+            data[i] = t;
+
+            double[] e = expected[index];
+            expected[index] = expected[i];
+            expected[i] = e;
+        }
     }
 }

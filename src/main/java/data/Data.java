@@ -11,4 +11,5 @@ public interface Data {
     double[][] getExpected();
     int getTotalData();
     void resetData();
+    public void shuffle();
 }

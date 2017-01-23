@@ -36,7 +36,7 @@ public class MLPTrainer extends Trainer {
         this.multiLayerPerceptron.log("Training network...");
         try {
             for (int j = 0; j<iterations; j++) {
-                this.multiLayerPerceptron.log("Epoch:" + j);
+                System.out.println("Epoch:" + j);
                 for(int i = 0; i<data.getTotalData(); i++) {//data.getTotalData()
                     double[] d = data.getNextData();
                     this.multiLayerPerceptron.log("Data: " + d[0] + " - " + d[1]);
@@ -44,6 +44,7 @@ public class MLPTrainer extends Trainer {
                     backpropagation(data.getNextExpected());
                 }
                 data.resetData();
+                data.shuffle();
             }
         } catch (IOException e){
             this.multiLayerPerceptron.log("Train error: " + e.getMessage());
@@ -74,7 +75,7 @@ public class MLPTrainer extends Trainer {
             x++;
         }
 
-        System.out.println("CROSS ENTROPY ERROR: " + error);
+        this.multiLayerPerceptron.log("CROSS ENTROPY ERROR: " + error);
 
         for (int i = hiddenLayers.size()-1; i >= 0; i--){
             ArrayList<Neuron> l = hiddenLayers.get(i);
@@ -116,25 +117,9 @@ public class MLPTrainer extends Trainer {
                     double newWeight = c.getWeight() + deltaWeight;
                     c.setWeight(newWeight);
                 }
-                //double deltaBias = -1*learningRate*n.getDerivative();
+                double deltaBias = 1*learningRate*n.getDerivative();
+                n.setBias(n.getBias()+deltaBias);
             }
-        }
-    }
-
-    private static void shuffleTrainSet(double[][] trainData, double[][] expected)
-    {
-        Random rnd = ThreadLocalRandom.current();
-        for (int i = trainData.length - 1; i > 0; i--)
-        {
-            int index = rnd.nextInt(i + 1);
-            // Simple swap
-            double[] t = trainData[index];
-            trainData[index] = trainData[i];
-            trainData[i] = t;
-
-            double[] e = expected[index];
-            expected[index] = expected[i];
-            expected[i] = e;
         }
     }
 

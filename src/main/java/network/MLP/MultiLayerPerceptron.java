@@ -38,7 +38,7 @@ public class MultiLayerPerceptron extends Network {
             ArrayList<Neuron> layer = new ArrayList<>();
             for (long i = 0L; i<l; i++){
                 id++;
-                Neuron n = new Neuron(0d, id);
+                Neuron n = new Neuron(Math.random(), id);
                 if (x==0){
                     n.connect(inputList);
                 } else {
