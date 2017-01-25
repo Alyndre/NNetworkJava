@@ -38,15 +38,15 @@ public class MLPTrainer extends Trainer {
             for (int j = 0; j<iterations; j++) {
                 System.out.println("Epoch:" + j);
                 for(int i = 0; i<data.getTotalData(); i++) {//data.getTotalData()
-                    double[] d = data.getNextData();
+                    double[] d = data.getData()[i];
                     this.multiLayerPerceptron.log("Data: " + d[0] + " - " + d[1]);
                     this.multiLayerPerceptron.evaluate(d);
-                    backpropagation(data.getNextExpected());
+                    backpropagation(data.getExpected()[i]);
                 }
-                data.resetData();
-                data.shuffle();
+                //data.resetData();
+                //data.shuffle();
             }
-        } catch (IOException e){
+        } catch (Exception e){
             this.multiLayerPerceptron.log("Train error: " + e.getMessage());
         }
         this.multiLayerPerceptron.log("Training done!");

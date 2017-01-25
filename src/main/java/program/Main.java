@@ -62,6 +62,9 @@ public class Main {
             long[] hidden = {30L};
             float learnRate = 3f;
 
+            data.loadData();
+            System.out.println("Data loaded!");
+
             Network network = new MultiLayerPerceptron(inputs, outputs, hidden);
             Trainer trainer = new MLPTrainer((MultiLayerPerceptron) network, learnRate, data, 5000);
 
