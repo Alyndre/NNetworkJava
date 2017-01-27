@@ -23,7 +23,7 @@ public class SelfOrganizingMap extends Network {
     }
 
     @Override
-    public double[] evaluate(double[] data) {
-        return new double[0];
+    public float[] evaluate(float[] data) {
+        return new float[0];
     }
 }

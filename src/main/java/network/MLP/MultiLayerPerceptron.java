@@ -26,7 +26,7 @@ public class MultiLayerPerceptron extends Network {
 
         for (long i = 0L; i < inputs; i++){
             id++;
-            Neuron n = new Neuron(0d, id);
+            Neuron n = new Neuron(0, id);
             inputList.add(n);
         }
         log("Input layer created!");
@@ -38,7 +38,7 @@ public class MultiLayerPerceptron extends Network {
             ArrayList<Neuron> layer = new ArrayList<>();
             for (long i = 0L; i<l; i++){
                 id++;
-                Neuron n = new Neuron(Math.random(), id);
+                Neuron n = new Neuron((float)Math.random(), id);
                 if (x==0){
                     n.connect(inputList);
                 } else {
@@ -53,7 +53,7 @@ public class MultiLayerPerceptron extends Network {
         log("Creating output layer...");
         for (long i = 0; i < outputs; i++){
             id++;
-            Neuron n = new Neuron(0d, id);
+            Neuron n = new Neuron(0, id);
             n.isOutputUnit = true;
             n.connect(hiddenLayers.get(hiddenLayers.size()-1));
             outputList.add(n);
@@ -65,8 +65,8 @@ public class MultiLayerPerceptron extends Network {
         log("Network online!");
     }
 
-    public double[] evaluate(double[] data){
-        double[] results = new double[outputList.size()];
+    public float[] evaluate(float[] data){
+        float[] results = new float[outputList.size()];
         if (data.length == inputList.size()){
             for (int x = 0; x<data.length; x++) {
                 Neuron n = inputList.get(x);
@@ -79,7 +79,7 @@ public class MultiLayerPerceptron extends Network {
         } else {
             log("ERROR: Data length is different from input neurons");
         }
-        double[] softmaxed = softmax(results);
+        float[] softmaxed = softmax(results);
         for (int x = 0; x<outputList.size(); x++){
             Neuron n = outputList.get(x);
             n.setOutput(softmaxed[x]);
@@ -87,9 +87,9 @@ public class MultiLayerPerceptron extends Network {
         return softmaxed;
     }
 
-    public double[] softmax (double[] outputs) {
+    public float[] softmax (float[] outputs) {
         // determine max output sum
-        double max = outputs[0];
+        float max = outputs[0];
         for (int i = 0; i < outputs.length; ++i)
             if (outputs[i] > max) max = outputs[i];
 
@@ -98,9 +98,9 @@ public class MultiLayerPerceptron extends Network {
         for (int i = 0; i < outputs.length; ++i)
             scale += Math.exp(outputs[i] - max);
 
-        double[] result = new double[outputs.length];
+        float[] result = new float[outputs.length];
         for (int i = 0; i < outputs.length; ++i)
-            result[i] = Math.exp(outputs[i] - max) / scale;
+            result[i] = (float) (Math.exp(outputs[i] - max) / scale);
 
         return result; // now scaled so that xi sum to 1.0
     }

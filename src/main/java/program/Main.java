@@ -28,16 +28,16 @@ public class Main {
             Data data = new XORData();
 
             Network network = new MultiLayerPerceptron(inputs, outputs, hidden);
-            network.debug = true;
-            Trainer trainer = new MLPTrainer((MultiLayerPerceptron) network, learnRate, data, 1000);
+            network.debug = false;
+            Trainer trainer = new MLPTrainer((MultiLayerPerceptron) network, learnRate, data, 10000);
             trainer.start();
 
             trainer.join();
 
             int i = 0;
-            for (double[] d : data.getData()){
+            for (float[] d : data.getData()){
                 System.out.println(d[0]+","+d[1]);
-                double[] res = network.evaluate(d);
+                float[] res = network.evaluate(d);
                 System.out.println("Expected: " + data.getExpected()[i][0] + " - " + data.getExpected()[i][1]);
                 System.out.println("Network eval: " + res[0] + " - " + res[1]);
                 i++;
@@ -73,7 +73,7 @@ public class Main {
 
             for (int i = 0; i < validationData.getData().length; i++){
                 System.out.println("Expected: " + validationData.expectedNumber[i]);
-                double [] res = network.evaluate(validationData.getData()[i]);
+                float [] res = network.evaluate(validationData.getData()[i]);
                 for (double d : res){
                     System.out.println("Output: " + d);
                 }

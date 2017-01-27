@@ -5,9 +5,9 @@ class Connection {
     private int id;
     private Neuron input;
     private Neuron output;
-    private double weight;
+    private float weight;
 
-    public Connection(Neuron input, Neuron output, double weight){
+    public Connection(Neuron input, Neuron output, float weight){
         this.input = input;
         this.output = output;
         this.weight = weight;
@@ -29,11 +29,11 @@ class Connection {
         this.output = output;
     }
 
-    public double getWeight() {
+    public float getWeight() {
         return weight;
     }
 
-    public void setWeight(double weight) {
+    public void setWeight(float weight) {
         this.weight = weight;
     }
 

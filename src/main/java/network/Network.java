@@ -15,7 +15,7 @@ public abstract class Network {
         this.setType(type);
     }
 
-    public abstract double[] evaluate(double[] data);
+    public abstract float[] evaluate(float[] data);
 
     public void drawNetwork(){
 

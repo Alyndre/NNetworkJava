@@ -38,7 +38,7 @@ public class MLPTrainer extends Trainer {
             for (int j = 0; j<iterations; j++) {
                 System.out.println("Epoch:" + j);
                 for(int i = 0; i<data.getTotalData(); i++) {//data.getTotalData()
-                    double[] d = data.getData()[i];
+                    float[] d = data.getData()[i];
                     this.multiLayerPerceptron.log("Data: " + d[0] + " - " + d[1]);
                     this.multiLayerPerceptron.evaluate(d);
                     backpropagation(data.getExpected()[i]);
@@ -52,7 +52,7 @@ public class MLPTrainer extends Trainer {
         this.multiLayerPerceptron.log("Training done!");
     }
 
-    private void backpropagation(double[] expected){
+    private void backpropagation(float[] expected){
         //SEEMS TO WORK, BUT MAYBE SOMETHING IS WRONG: CHECK https://mattmazur.com/2015/03/17/a-step-by-step-backpropagation-example/
         //TOO SLOW!
 
@@ -60,7 +60,7 @@ public class MLPTrainer extends Trainer {
         List<ArrayList<Neuron>> hiddenLayers = this.multiLayerPerceptron.getHiddenLayers();
 
         String exp = "Expected: ";
-        for(double d : expected) {
+        for(float d : expected) {
             exp+=d+" - ";
         }
         this.multiLayerPerceptron.log(exp);
@@ -69,8 +69,8 @@ public class MLPTrainer extends Trainer {
         double error = 0;
         int x = 0;
         for (Neuron n : outputList){
-            double out = n.getOutput();
-            double g = expected[x]-out;
+            float out = n.getOutput();
+            float g = expected[x]-out;
             error -= expected[x] * Math.log(out);
             n.setDerivative(g);
             x++;
@@ -82,7 +82,7 @@ public class MLPTrainer extends Trainer {
             ArrayList<Neuron> l = hiddenLayers.get(i);
             for (Neuron n : l) {
                 //Calculate the sum of the delta of the neurons of next layer times weight of that connection
-                double sumK = 0;
+                float sumK = 0;
                 List<Neuron> nextLayer;
                 if (i+1 == hiddenLayers.size()){
                     nextLayer = outputList;
@@ -92,8 +92,8 @@ public class MLPTrainer extends Trainer {
                 for (Neuron nL : nextLayer){
                     sumK += nL.getDerivative() * nL.getInputs().get(n.id).getWeight();
                 }
-                double oJ = n.getOutput();
-                double derivativeJ = derivate(oJ) * sumK;
+                float oJ = n.getOutput();
+                float derivativeJ = derivate(oJ) * sumK;
                 n.setDerivative(derivativeJ);
             }
         }
@@ -102,8 +102,8 @@ public class MLPTrainer extends Trainer {
         for (Neuron n : outputList){
             for (Map.Entry<Integer, Connection> cEntry : n.getInputs().entrySet()){
                 Connection c = cEntry.getValue();
-                double deltaWeight = 1*learningRate*n.getDerivative()*c.getInput().getOutput();
-                double newWeight = c.getWeight() + deltaWeight;
+                float deltaWeight = 1*learningRate*n.getDerivative()*c.getInput().getOutput();
+                float newWeight = c.getWeight() + deltaWeight;
                 c.setWeight(newWeight);
             }
             //double deltaBias = -1*learningRate*n.getDerivative();
@@ -114,21 +114,21 @@ public class MLPTrainer extends Trainer {
             for (Neuron n : l) {
                 for (Map.Entry<Integer, Connection> cEntry : n.getInputs().entrySet()){
                     Connection c = cEntry.getValue();
-                    double deltaWeight = 1*learningRate*n.getDerivative()*c.getInput().getOutput();
-                    double newWeight = c.getWeight() + deltaWeight;
+                    float deltaWeight = 1*learningRate*n.getDerivative()*c.getInput().getOutput();
+                    float newWeight = c.getWeight() + deltaWeight;
                     c.setWeight(newWeight);
                 }
-                double deltaBias = 1*learningRate*n.getDerivative();
+                float deltaBias = 1*learningRate*n.getDerivative();
                 n.setBias(n.getBias()+deltaBias);
             }
         }
     }
 
-    private double calcError(double target, double output){
-        double error;
+    private float calcError(float target, float output){
+        float error;
         //error = output - target;
-        double log1 = Math.log(output);
-        double log2 = Math.log(1-output);
+        float log1 = (float) Math.log(output);
+        float log2 = (float) Math.log(1-output);
         if (Double.isNaN(log1)){
             log1 = 0;
         }
@@ -139,7 +139,7 @@ public class MLPTrainer extends Trainer {
         return error;
     }
 
-    private double derivate(double val){
+    private float derivate(float val){
         return val * (1 - val);
     }
 }

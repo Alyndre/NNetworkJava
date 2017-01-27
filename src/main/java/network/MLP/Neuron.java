@@ -8,22 +8,22 @@ class Neuron {
 
     int id = 0;
     private HashMap<Integer, Connection> inputs;
-    private double bias;
+    private float bias;
     private boolean fired;
-    private double data;
-    private double output;
-    private double error;
-    private double value;
-    private double derivative;
+    private float data;
+    private float output;
+    private float error;
+    private float value;
+    private float derivative;
     public boolean isOutputUnit = false;
 
-    Neuron (double bias, int id) {
+    Neuron (float bias, int id) {
         this.id = id;
-        this.error = 0.0d;
-        this.output = 0.0d;
-        this.data = 0.0d;
+        this.error = 0;
+        this.output = 0;
+        this.data = 0;
         this.bias = bias;
-        this.derivative = 0.0d;
+        this.derivative = 0;
         fired = false;
         inputs = new HashMap<>();
     }
@@ -37,13 +37,13 @@ class Neuron {
         }
     }
 
-    void feed (double data) {
+    void feed (float data) {
         this.data = data;
     }
 
-    double fire () {
+    float fire () {
         if (inputs.size() > 0) {
-            double totalInput = 0.0;
+            float totalInput = 0;
             for (Map.Entry<Integer, Connection> cEntry : inputs.entrySet()){
                 Connection c = cEntry.getValue();
                 totalInput += (c.getInput().fire() * c.getWeight());
@@ -68,40 +68,40 @@ class Neuron {
         return fired;
     }
 
-    private double sigmoid(double value){
-        return 1 / (1+Math.exp((-1*value)));
+    private float sigmoid(float value){
+        return (float) (1 / (1+Math.exp((-1*value))));
     }
 
-    private double hyperTan(double x)
+    private float hyperTan(float x)
     {
-        if (x < -20.0) return -1.0; // approximation is correct to 30 decimals
-        else if (x > 20.0) return 1.0;
-        else return Math.tanh(x);
+        if (x < -20.0) return -1; // approximation is correct to 30 decimals
+        else if (x > 20.0) return 1;
+        else return (float) Math.tanh(x);
     }
 
-    double getOutput() {
+    float getOutput() {
         return output;
     }
 
-    public void setOutput(double output) {
+    public void setOutput(float output) {
         this.output = output;
     }
 
     HashMap<Integer, Connection> getInputs() { return inputs; }
 
-    public void setError(double error) {
+    public void setError(float error) {
         this.error = error;
     }
 
-    public double getError() { return error; }
+    public float getError() { return error; }
 
-    void setDerivative(double derivative) { this.derivative = derivative; }
+    void setDerivative(float derivative) { this.derivative = derivative; }
 
-    double getDerivative() { return derivative; }
+    float getDerivative() { return derivative; }
 
-    public void setBias(double bias) { this.bias = bias; }
+    public void setBias(float bias) { this.bias = bias; }
 
-    public double getBias() { return bias; }
+    public float getBias() { return bias; }
 
     /*
     double calcError(double target){
