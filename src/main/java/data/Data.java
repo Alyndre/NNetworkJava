@@ -5,10 +5,10 @@ import java.io.IOException;
 public interface Data {
 
     void normalizeData();
-    double[] getNextData() throws IOException;
-    double[] getNextExpected() throws IOException;
-    double[][] getData();
-    double[][] getExpected();
+    float[] getNextData() throws IOException;
+    float[] getNextExpected() throws IOException;
+    float[][] getData();
+    float[][] getExpected();
     int getTotalData();
     void resetData();
     public void shuffle();

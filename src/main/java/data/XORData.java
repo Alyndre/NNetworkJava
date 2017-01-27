@@ -9,14 +9,14 @@ public class XORData implements Data {
     public int dataCount = 0;
     public int expectedCount = 0;
 
-    double[][] data = {
+    float[][] data = {
             {0, 0},
             {0, 1},
             {1, 0},
             {1, 1}
     };
 
-    double[][] expected = {{1,0}, {0,1}, {0,1}, {1,0}};
+    float[][] expected = {{1,0}, {0,1}, {0,1}, {1,0}};
 
     public XORData() {
     }
@@ -27,26 +27,26 @@ public class XORData implements Data {
     }
 
     @Override
-    public double[] getNextData() throws IOException {
-        double[] res = data[dataCount];
+    public float[] getNextData() throws IOException {
+        float[] res = data[dataCount];
         dataCount++;
         return res;
     }
 
     @Override
-    public double[] getNextExpected() throws IOException {
-        double[] res = expected[expectedCount];
+    public float[] getNextExpected() throws IOException {
+        float[] res = expected[expectedCount];
         expectedCount++;
         return res;
     }
 
     @Override
-    public double[][] getData() {
+    public float[][] getData() {
         return data;
     }
 
     @Override
-    public double[][] getExpected() {
+    public float[][] getExpected() {
         return expected;
     }
 
@@ -69,11 +69,11 @@ public class XORData implements Data {
         {
             int index = rnd.nextInt(i + 1);
             // Simple swap
-            double[] t = data[index];
+            float[] t = data[index];
             data[index] = data[i];
             data[i] = t;
 
-            double[] e = expected[index];
+            float[] e = expected[index];
             expected[index] = expected[i];
             expected[i] = e;
         }

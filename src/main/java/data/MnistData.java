@@ -8,9 +8,9 @@ public class MnistData implements Data {
     private String inputImagePath;
     private String inputLabelPath;
 
-    private double[][] data;
-    private double[][] expected;
-    public double[] expectedNumber;
+    private float[][] data;
+    private float[][] expected;
+    public float[] expectedNumber;
     private FileInputStream inImage = null;
     private FileInputStream inLabel = null;
     public int numberOfPixels;
@@ -26,8 +26,8 @@ public class MnistData implements Data {
     }
 
     public void loadData() {
-        double[] imgData = new double[numberOfPixels];
-        double[] expected = new double[numOutput];
+        float[] imgData = new float[numberOfPixels];
+        float[] expected = new float[numOutput];
         try {
             for (int i = 0; i < numberOfImages; i++) {
                 for (int p = 0; p < numberOfPixels; p++) {
@@ -48,9 +48,9 @@ public class MnistData implements Data {
     }
 
     @Override
-    public double[] getNextData() throws IOException{
+    public float[] getNextData() throws IOException{
         //System.out.println("Data num: " + dataCount);
-        double[] imgData = new double[numberOfPixels];
+        float[] imgData = new float[numberOfPixels];
         try {
             for (int p = 0; p < numberOfPixels; p++) {
                 int x = inImage.read();
@@ -66,9 +66,9 @@ public class MnistData implements Data {
     }
 
     @Override
-    public double[] getNextExpected() throws IOException{
+    public float[] getNextExpected() throws IOException{
         try {
-            double[] expected = new double[numOutput];
+            float[] expected = new float[numOutput];
             int x = inLabel.read();
             //System.out.println("Expected: " + x);
             expected[x] = 1;
@@ -87,12 +87,12 @@ public class MnistData implements Data {
     }
 
     @Override
-    public double[][] getData() {
+    public float[][] getData() {
         return data;
     }
 
     @Override
-    public double[][] getExpected() {
+    public float[][] getExpected() {
         return expected;
     }
 
@@ -119,9 +119,9 @@ public class MnistData implements Data {
             int numberOfLabels = (inLabel.read() << 24) | (inLabel.read() << 16) | (inLabel.read() << 8) | (inLabel.read());
 
             numberOfPixels = numberOfRows * numberOfColumns;
-            data = new double[numberOfImages][numberOfPixels];
-            expected = new double[numberOfLabels][numOutput];
-            this.expectedNumber = new double[numberOfImages];
+            data = new float[numberOfImages][numberOfPixels];
+            expected = new float[numberOfLabels][numOutput];
+            this.expectedNumber = new float[numberOfImages];
             this.numOutput = numOutput;
             dataCount = 0;
             expectedCount = 0;

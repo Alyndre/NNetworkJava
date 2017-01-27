@@ -54,6 +54,7 @@ public class MLPTrainer extends Trainer {
 
     private void backpropagation(double[] expected){
         //SEEMS TO WORK, BUT MAYBE SOMETHING IS WRONG: CHECK https://mattmazur.com/2015/03/17/a-step-by-step-backpropagation-example/
+        //TOO SLOW!
 
         List<Neuron> outputList = this.multiLayerPerceptron.getOutputList();
         List<ArrayList<Neuron>> hiddenLayers = this.multiLayerPerceptron.getHiddenLayers();
