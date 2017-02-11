@@ -1,3 +1,5 @@
+import data.MnistData;
+
 import java.util.Arrays;
 import java.util.Random;
 
@@ -46,8 +48,28 @@ public class OGmlp {
                 for (int i = 0; i < output.length; i++) {
                     output[i] = (float) (1 / (1 + Math.exp(-output[i])));
                 }
+            } else {
+                output = softmax(output);
             }
             return Arrays.copyOf(output, output.length);
+        }
+
+        public float[] softmax (float[] outputs) {
+            // determine max output sum
+            float max = outputs[0];
+            for (int i = 0; i < outputs.length; ++i)
+                if (outputs[i] > max) max = outputs[i];
+
+            // determine scaling factor -- sum of exp(each val - max)
+            double scale = 0.0;
+            for (int i = 0; i < outputs.length; ++i)
+                scale += Math.exp(outputs[i] - max);
+
+            float[] result = new float[outputs.length];
+            for (int i = 0; i < outputs.length; ++i)
+                result[i] = (float) (Math.exp(outputs[i] - max) / scale);
+
+            return result; // now scaled so that xi sum to 1.0
         }
 
         public float[] train(float[] error, float learningRate, float momentum) {
@@ -97,7 +119,7 @@ public class OGmlp {
         float[] calcOut = run(input);
         float[] error = new float[calcOut.length];
         for (int i = 0; i < error.length; i++) {
-            error[i] = targetOutput[i] - calcOut[i]; // negative error
+            error[i] = -1 * targetOutput[i] * (float)Math.log(calcOut[i]); // negative error
         }
         for (int i = layers.length - 1; i >= 0; i--) {
             error = layers[i].train(error, learningRate, momentum);
@@ -105,25 +127,44 @@ public class OGmlp {
     }
 
     public static void main(String[] args) throws Exception {
-        float[][] train = new float[][]{new float[]{0, 0}, new float[]{0, 1}, new float[]{1, 0}, new float[]{1, 1}};
-        float[][] res = new float[][]{new float[]{0}, new float[]{1}, new float[]{1}, new float[]{0}};
-        OGmlp mlp = new OGmlp(2, new int[]{2, 1});
+        String inputImagePath = "src/main/resources/train-images.idx3-ubyte";
+        String inputLabelPath = "src/main/resources/train-labels.idx1-ubyte";
+        MnistData data = new MnistData(inputImagePath, inputLabelPath, 10);
+        data.loadData();
+        System.out.println("DATA LOADED!");
+
+        String validateImagePath = "src/main/resources/t10k-images.idx3-ubyte";
+        String validateLabelPath = "src/main/resources/t10k-labels.idx1-ubyte";
+        MnistData validationData = new MnistData(validateImagePath, validateLabelPath, 10);
+        validationData.loadData();
+        System.out.println("VALIDATION LOADED!");
+
+        float[][] train = data.getData();
+        float[][] res = data.getExpected();
+
+        OGmlp mlp = new OGmlp(data.numberOfPixels, new int[]{30, 10});
         mlp.getLayer(1).setIsSigmoid(false);
-        Random r = new Random();
-        int en = 500;
+
+        int en = 10000;
         for (int e = 0; e < en; e++) {
 
             for (int i = 0; i < res.length; i++) {
-                int idx = r.nextInt(res.length);
-                mlp.train(train[idx], res[idx], 0.3f, 0.6f);
+                mlp.train(train[i], res[i], 2.5f, 0.6f);
             }
+            System.out.println("Epoch: " + e);
 
-            if ((e + 1) % 100 == 0) {
+            if ((e + 1) % 50 == 0) {
                 System.out.println();
-                for (int i = 0; i < res.length; i++) {
-                    float[] t = train[i];
-                    System.out.printf("%d epoch\n", e + 1);
-                    System.out.printf("%.1f, %.1f --> %.3f\n", t[0], t[1], mlp.run(t)[0]);
+                for (int i = 0; i < validationData.getData().length; i++) {
+                    float[] t = validationData.getData()[i];
+                    float[] results = mlp.run(t);
+                    System.out.print("Validation Epoch: " + (e+1));
+                    System.out.println(" - Expected: " + validationData.expectedNumber[i]);
+                    int w = 0;
+                    for (float f : results) {
+                        System.out.println("Output nº" + w + " Get: " + f + " - ");
+                        w++;
+                    }
                 }
             }
         }

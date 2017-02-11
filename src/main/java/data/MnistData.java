@@ -26,10 +26,10 @@ public class MnistData implements Data {
     }
 
     public void loadData() {
-        float[] imgData = new float[numberOfPixels];
-        float[] expected = new float[numOutput];
         try {
             for (int i = 0; i < numberOfImages; i++) {
+                float[] imgData = new float[numberOfPixels];
+                float[] ex = new float[numOutput];
                 for (int p = 0; p < numberOfPixels; p++) {
                     int x = inImage.read();
                     imgData[p] = x / 255;
@@ -38,8 +38,8 @@ public class MnistData implements Data {
 
                 int x = inLabel.read();
                 this.expectedNumber[i] = x;
-                expected[x] = 1;
-                this.expected[i] = expected;
+                ex[x] = 1;
+                this.expected[i] = ex;
             }
 
         } catch (IOException e) {
