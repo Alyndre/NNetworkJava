@@ -15,12 +15,14 @@ public class MLPTrainer extends Trainer {
     private MultiLayerPerceptron multiLayerPerceptron;
     private Data data;
     private float learningRate;
+    private float momentum;
     private int iterations;
 
-    public MLPTrainer(MultiLayerPerceptron multiLayerPerceptron, float learningRate, Data data, int iterations){
+    public MLPTrainer(MultiLayerPerceptron multiLayerPerceptron, float learningRate, float momentum, Data data, int iterations){
         super();
         this.multiLayerPerceptron = multiLayerPerceptron;
         this.learningRate = learningRate;
+        this.momentum = momentum;
         this.data = data;
         this.iterations = iterations;
     }
@@ -104,7 +106,7 @@ public class MLPTrainer extends Trainer {
             Neuron[] inputs = n.getInputs();
             for (int i = 0; i<inputs.length; i++){
                 float deltaWeight = 1*learningRate*n.getDerivative()*inputs[i].getOutput();
-                n.weights[i] = n.weights[i] + deltaWeight;
+                n.weights[i] = n.weights[i] + (deltaWeight * momentum);
             }
             //double deltaBias = -1*learningRate*n.getDerivative();
         }
@@ -115,7 +117,7 @@ public class MLPTrainer extends Trainer {
                 Neuron[] inputs = n.getInputs();
                 for (int i = 0; i<inputs.length; i++){
                     float deltaWeight = 1*learningRate*n.getDerivative()*inputs[i].getOutput();
-                    n.weights[i] = n.weights[i] + deltaWeight;
+                    n.weights[i] = n.weights[i] + (deltaWeight * momentum);
                 }
                 /*float deltaBias = 1*learningRate*n.getDerivative();
                 n.setBias(n.getBias()+deltaBias);*/

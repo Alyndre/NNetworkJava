@@ -8,7 +8,6 @@ public class MultiLayerPerceptron extends Network {
     private Neuron[] inputList;
     private Neuron[] outputList;
     private ArrayList<Neuron[]> hiddenLayers;
-    private float momentum = 1;
 
     public MultiLayerPerceptron(int inputs, int outputs, int[] hidden){
         super(Type.MLP);

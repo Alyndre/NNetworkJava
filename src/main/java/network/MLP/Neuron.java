@@ -1,26 +1,19 @@
 package network.MLP;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 class Neuron {
 
     int id = 0;
     private Neuron[] inputs;
-    public float[] weights;
+    float[] weights;
     private float bias;
-    public boolean fired;
+    boolean fired;
     private float data;
     private float output;
-    private float error;
-    private float value;
     private float derivative;
-    public boolean isOutputUnit = false;
+    boolean isOutputUnit = false;
 
     Neuron (float bias, int id, Neuron[] inputs) {
         this.id = id;
-        this.error = 0;
         this.output = 0;
         this.data = 0;
         this.bias = bias;
@@ -44,11 +37,11 @@ class Neuron {
             return output;
         }
         if (inputs.length > 0) {
-            float totalInput = 0;
+            float value = 0;
             for (int i = 0; i < inputs.length; i++) {
-                totalInput += inputs[i].fire() * weights[i];
+                value += inputs[i].fire() * weights[i];
             }
-            value = totalInput+bias;
+            value += bias;
             if (isOutputUnit) {
                 output = value;
             } else {
@@ -85,12 +78,6 @@ class Neuron {
 
     Neuron[] getInputs() { return inputs; }
 
-    public void setError(float error) {
-        this.error = error;
-    }
-
-    public float getError() { return error; }
-
     void setDerivative(float derivative) { this.derivative = derivative; }
 
     float getDerivative() { return derivative; }
@@ -99,19 +86,4 @@ class Neuron {
 
     public float getBias() { return bias; }
 
-    /*
-    double calcError(double target){
-        //error = output - target;
-        double log1 = Math.log(output);
-        double log2 = Math.log(1-output);
-        if (Double.isNaN(log1)){
-            log1 = 0;
-        }
-        if (Double.isNaN(log2)){
-            log2 = 0;
-        }
-        error = -target*log1-(1-target)*log2;
-        return error;
-    }
-*/
 }

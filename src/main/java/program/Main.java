@@ -17,18 +17,18 @@ public class Main {
 
     public static void main(String[] args) {
 
-        /*
+/*
         int inputs = 2;
         int outputs = 2;
         int[] hidden = {4};
-
+        float momentum = 0.6f;
         float learnRate = 0.5f;
 
         Data data = new XORData();
 
         Network network = new MultiLayerPerceptron(inputs, outputs, hidden);
         network.debug = false;
-        Trainer trainer = new MLPTrainer((MultiLayerPerceptron) network, learnRate, data, 10000);
+        Trainer trainer = new MLPTrainer((MultiLayerPerceptron) network, learnRate, momentum, data, 10000);
 
         trainer.start();
         try {
@@ -46,6 +46,7 @@ public class Main {
             i++;
         }*/
 
+
         String inputImagePath = "src/main/resources/train-images.idx3-ubyte";
         String inputLabelPath = "src/main/resources/train-labels.idx1-ubyte";
         MnistData data = new MnistData(inputImagePath, inputLabelPath, 10);
@@ -60,25 +61,19 @@ public class Main {
         int outputs = 10;
         int[] hidden = {30};
         float learnRate = 3f;
+        float momentum = 0.6f;
 
         data.loadData();
         System.out.println("Data loaded!");
 
         Network network = new MultiLayerPerceptron(inputs, outputs, hidden);
-        Trainer trainer = new MLPTrainer((MultiLayerPerceptron) network, learnRate, data, 5000);
+        Trainer trainer = new MLPTrainer((MultiLayerPerceptron) network, learnRate, momentum, data, 5000);
 
         trainer.start();
         try {
             trainer.join();
         } catch (InterruptedException e){
             System.out.println("InterruptedException: " + e.getMessage());
-        }
-
-        for (int i = 0; i<5000; i++) {
-            System.out.println("Epoch: " + i + "/5000");
-            for (float[] img : data.getData()) {
-                network.evaluate(img);
-            }
         }
 
         for (int i = 0; i < validationData.getData().length; i++){
