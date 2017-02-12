@@ -7,7 +7,7 @@ import network.MLP.MLPTrainer;
 import network.MLP.MultiLayerPerceptron;
 import network.Trainer;
 import network.Network;
-import static spark.Spark.*;
+//import static spark.Spark.*;
 
 public class Main {
 
@@ -17,34 +17,34 @@ public class Main {
 
     public static void main(String[] args) {
 
+        /*
+        int inputs = 2;
+        int outputs = 2;
+        int[] hidden = {4};
 
-        get("/", (request, response) -> {
-            long inputs = 2L;
-            long outputs = 2L;
-            long[] hidden = {4L};
+        float learnRate = 0.5f;
 
-            float learnRate = 0.5f;
+        Data data = new XORData();
 
-            Data data = new XORData();
+        Network network = new MultiLayerPerceptron(inputs, outputs, hidden);
+        network.debug = false;
+        Trainer trainer = new MLPTrainer((MultiLayerPerceptron) network, learnRate, data, 10000);
 
-            Network network = new MultiLayerPerceptron(inputs, outputs, hidden);
-            network.debug = false;
-            Trainer trainer = new MLPTrainer((MultiLayerPerceptron) network, learnRate, data, 10000);
-            trainer.start();
-
+        trainer.start();
+        try {
             trainer.join();
+        } catch (InterruptedException e){
+            System.out.println("InterruptedException: " + e.getMessage());
+        }
 
-            int i = 0;
-            for (float[] d : data.getData()){
-                System.out.println(d[0]+","+d[1]);
-                float[] res = network.evaluate(d);
-                System.out.println("Expected: " + data.getExpected()[i][0] + " - " + data.getExpected()[i][1]);
-                System.out.println("Network eval: " + res[0] + " - " + res[1]);
-                i++;
-            }
-
-            return "Ok";
-        });
+        int i = 0;
+        for (float[] d : data.getData()){
+            System.out.println(d[0]+","+d[1]);
+            float[] res = network.evaluate(d);
+            System.out.println("Expected: " + data.getExpected()[i][0] + " - " + data.getExpected()[i][1]);
+            System.out.println("Network eval: " + res[0] + " - " + res[1]);
+            i++;
+        }*/
 
         String inputImagePath = "src/main/resources/train-images.idx3-ubyte";
         String inputLabelPath = "src/main/resources/train-labels.idx1-ubyte";
@@ -55,32 +55,44 @@ public class Main {
         MnistData validationData = new MnistData(validateImagePath, validateLabelPath, 10);
         validationData.loadData();
 
-        get("/mnist", (request, response) -> {
-            System.out.println("Number of inputs: " + data.numberOfPixels);
-            long inputs = data.numberOfPixels;
-            long outputs = 10;
-            long[] hidden = {30L};
-            float learnRate = 3f;
+        System.out.println("Number of inputs: " + data.numberOfPixels);
+        int inputs = data.numberOfPixels;
+        int outputs = 10;
+        int[] hidden = {30};
+        float learnRate = 3f;
 
-            data.loadData();
-            System.out.println("Data loaded!");
+        data.loadData();
+        System.out.println("Data loaded!");
 
-            Network network = new MultiLayerPerceptron(inputs, outputs, hidden);
-            Trainer trainer = new MLPTrainer((MultiLayerPerceptron) network, learnRate, data, 5000);
+        Network network = new MultiLayerPerceptron(inputs, outputs, hidden);
+        Trainer trainer = new MLPTrainer((MultiLayerPerceptron) network, learnRate, data, 5000);
 
-            trainer.start();
+        trainer.start();
+        try {
             trainer.join();
+        } catch (InterruptedException e){
+            System.out.println("InterruptedException: " + e.getMessage());
+        }
 
-            for (int i = 0; i < validationData.getData().length; i++){
-                System.out.println("Expected: " + validationData.expectedNumber[i]);
-                float [] res = network.evaluate(validationData.getData()[i]);
-                for (double d : res){
-                    System.out.println("Output: " + d);
-                }
+        for (int i = 0; i<5000; i++) {
+            System.out.println("Epoch: " + i + "/5000");
+            for (float[] img : data.getData()) {
+                network.evaluate(img);
             }
+        }
 
-            return "Number of inputs: " + data.numberOfPixels;
-        });
+        for (int i = 0; i < validationData.getData().length; i++){
+            System.out.println("Expected: " + validationData.expectedNumber[i]);
+            float [] res = network.evaluate(validationData.getData()[i]);
+            for (double d : res){
+                System.out.println("Output: " + d);
+            }
+        }
+
+
+        /*get("/", (request, response) -> {
+            return "Ok";
+        });*/
     }
 }
 

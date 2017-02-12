@@ -56,8 +56,8 @@ public class MLPTrainer extends Trainer {
         //SEEMS TO WORK, BUT MAYBE SOMETHING IS WRONG: CHECK https://mattmazur.com/2015/03/17/a-step-by-step-backpropagation-example/
         //TOO SLOW!
 
-        List<Neuron> outputList = this.multiLayerPerceptron.getOutputList();
-        List<ArrayList<Neuron>> hiddenLayers = this.multiLayerPerceptron.getHiddenLayers();
+        Neuron[] outputList = this.multiLayerPerceptron.getOutputList();
+        ArrayList<Neuron[]> hiddenLayers = this.multiLayerPerceptron.getHiddenLayers();
 
         String exp = "Expected: ";
         for(float d : expected) {
@@ -79,18 +79,19 @@ public class MLPTrainer extends Trainer {
         this.multiLayerPerceptron.log("CROSS ENTROPY ERROR: " + error);
 
         for (int i = hiddenLayers.size()-1; i >= 0; i--){
-            ArrayList<Neuron> l = hiddenLayers.get(i);
-            for (Neuron n : l) {
+            Neuron[] l = hiddenLayers.get(i);
+            for (int z = 0; z<l.length; z++) {
+                Neuron n = l[z];
                 //Calculate the sum of the delta of the neurons of next layer times weight of that connection
                 float sumK = 0;
-                List<Neuron> nextLayer;
+                Neuron[] nextLayer;
                 if (i+1 == hiddenLayers.size()){
                     nextLayer = outputList;
                 } else {
                     nextLayer = hiddenLayers.get(i+1);
                 }
-                for (Neuron nL : nextLayer){
-                    sumK += nL.getDerivative() * nL.getInputs().get(n.id).getWeight();
+                for (int w = 0; w<nextLayer.length; w++){
+                    sumK += nextLayer[w].getDerivative() * nextLayer[w].weights[z];
                 }
                 float oJ = n.getOutput();
                 float derivativeJ = derivate(oJ) * sumK;
@@ -100,26 +101,24 @@ public class MLPTrainer extends Trainer {
 
         //Calc deltaWeight
         for (Neuron n : outputList){
-            for (Map.Entry<Integer, Connection> cEntry : n.getInputs().entrySet()){
-                Connection c = cEntry.getValue();
-                float deltaWeight = 1*learningRate*n.getDerivative()*c.getInput().getOutput();
-                float newWeight = c.getWeight() + deltaWeight;
-                c.setWeight(newWeight);
+            Neuron[] inputs = n.getInputs();
+            for (int i = 0; i<inputs.length; i++){
+                float deltaWeight = 1*learningRate*n.getDerivative()*inputs[i].getOutput();
+                n.weights[i] = n.weights[i] + deltaWeight;
             }
             //double deltaBias = -1*learningRate*n.getDerivative();
         }
 
-        for (int i = hiddenLayers.size()-1; i >= 0; i--) {
-            ArrayList<Neuron> l = hiddenLayers.get(i);
-            for (Neuron n : l) {
-                for (Map.Entry<Integer, Connection> cEntry : n.getInputs().entrySet()){
-                    Connection c = cEntry.getValue();
-                    float deltaWeight = 1*learningRate*n.getDerivative()*c.getInput().getOutput();
-                    float newWeight = c.getWeight() + deltaWeight;
-                    c.setWeight(newWeight);
+        for (int l = hiddenLayers.size()-1; l >= 0; l--) {
+            Neuron[] layer = hiddenLayers.get(l);
+            for (Neuron n : layer) {
+                Neuron[] inputs = n.getInputs();
+                for (int i = 0; i<inputs.length; i++){
+                    float deltaWeight = 1*learningRate*n.getDerivative()*inputs[i].getOutput();
+                    n.weights[i] = n.weights[i] + deltaWeight;
                 }
-                float deltaBias = 1*learningRate*n.getDerivative();
-                n.setBias(n.getBias()+deltaBias);
+                /*float deltaBias = 1*learningRate*n.getDerivative();
+                n.setBias(n.getBias()+deltaBias);*/
             }
         }
     }

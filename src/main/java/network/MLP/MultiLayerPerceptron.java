@@ -5,58 +5,59 @@ import java.util.ArrayList;
 
 public class MultiLayerPerceptron extends Network {
 
-    private ArrayList<Neuron> inputList;
-    private ArrayList<Neuron> outputList;
-    private ArrayList<ArrayList<Neuron>> hiddenLayers;
+    private Neuron[] inputList;
+    private Neuron[] outputList;
+    private ArrayList<Neuron[]> hiddenLayers;
     private float momentum = 1;
 
-    public MultiLayerPerceptron(long inputs, long outputs, long[] hidden){
+    public MultiLayerPerceptron(int inputs, int outputs, int[] hidden){
         super(Type.MLP);
         log("Assembling network...");
         log("Type of network: " + this.getType());
 
         int id = 0;
-        long sumNeurons = 0;
+        int sumNeurons = 0;
 
+        inputList = new Neuron[inputs];
         hiddenLayers = new ArrayList<>();
-        inputList = new ArrayList<>();
-        outputList = new ArrayList<>();
+        outputList = new Neuron[outputs];
+
 
         log("Creating input layer...");
 
-        for (long i = 0L; i < inputs; i++){
+        for (int i = 0; i < inputs; i++){
             id++;
-            Neuron n = new Neuron(0, id);
-            inputList.add(n);
+            Neuron n = new Neuron(0, id, new Neuron[0]);
+            inputList[i] = n;
         }
         log("Input layer created!");
 
         log("Creating hidden layers...");
         log("Number of hidden layers: " + hidden.length);
         for (int x = 0; x<hidden.length; x++){
-            long l = hidden[x];
-            ArrayList<Neuron> layer = new ArrayList<>();
-            for (long i = 0L; i<l; i++){
+            int l = hidden[x];
+            Neuron[] prevLayer;
+            Neuron[] layer = new Neuron[l];
+            for (int i = 0; i<l; i++){
                 id++;
-                Neuron n = new Neuron((float)Math.random(), id);
                 if (x==0){
-                    n.connect(inputList);
+                    prevLayer = inputList;
                 } else {
-                    n.connect(hiddenLayers.get(x-1));
+                    prevLayer = hiddenLayers.get(x-1);
                 }
-                layer.add(n);
+                Neuron n = new Neuron((float)Math.random(), id, prevLayer);
+                layer[i] = n;
             }
             hiddenLayers.add(layer);
         }
         log("Hidden layers created!");
 
         log("Creating output layer...");
-        for (long i = 0; i < outputs; i++){
+        for (int i = 0; i < outputs; i++){
             id++;
-            Neuron n = new Neuron(0, id);
+            Neuron n = new Neuron(0, id, hiddenLayers.get(hiddenLayers.size()-1));
             n.isOutputUnit = true;
-            n.connect(hiddenLayers.get(hiddenLayers.size()-1));
-            outputList.add(n);
+            outputList[i] = n;
         }
         log("Output layer created!");
 
@@ -66,28 +67,30 @@ public class MultiLayerPerceptron extends Network {
     }
 
     public float[] evaluate(float[] data){
-        float[] results = new float[outputList.size()];
-        if (data.length == inputList.size()){
+        float[] results = new float[outputList.length];
+        if (data.length == inputList.length){
             for (int x = 0; x<data.length; x++) {
-                Neuron n = inputList.get(x);
+                Neuron n = inputList[x];
                 n.feed(data[x]);
             }
-            for (int x = 0; x<outputList.size(); x++){
-                Neuron n = outputList.get(x);
+            for (int x = 0; x<outputList.length; x++){
+                Neuron n = outputList[x];
                 results[x] = n.fire();
             }
         } else {
             log("ERROR: Data length is different from input neurons");
         }
         float[] softmaxed = softmax(results);
-        for (int x = 0; x<outputList.size(); x++){
-            Neuron n = outputList.get(x);
+        for (int x = 0; x<outputList.length; x++){
+            Neuron n = outputList[x];
             n.setOutput(softmaxed[x]);
         }
+
+        resetNeurons();
         return softmaxed;
     }
 
-    public float[] softmax (float[] outputs) {
+    private float[] softmax (float[] outputs) {
         // determine max output sum
         float max = outputs[0];
         for (int i = 0; i < outputs.length; ++i)
@@ -105,15 +108,31 @@ public class MultiLayerPerceptron extends Network {
         return result; // now scaled so that xi sum to 1.0
     }
 
-    ArrayList<Neuron> getInputList() {
+    private void resetNeurons() {
+        for(Neuron n : inputList) {
+            n.fired = false;
+        }
+
+        for(Neuron n : outputList) {
+            n.fired = false;
+        }
+
+        for(Neuron[] neurons : hiddenLayers) {
+            for (Neuron n : neurons) {
+                n.fired = false;
+            }
+        }
+    }
+
+    Neuron[] getInputList() {
         return inputList;
     }
 
-    ArrayList<Neuron> getOutputList() {
+    Neuron[] getOutputList() {
         return outputList;
     }
 
-    ArrayList<ArrayList<Neuron>> getHiddenLayers() {
+    ArrayList<Neuron[]> getHiddenLayers() {
         return hiddenLayers;
     }
 

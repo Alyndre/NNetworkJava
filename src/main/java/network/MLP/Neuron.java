@@ -7,9 +7,10 @@ import java.util.Map;
 class Neuron {
 
     int id = 0;
-    private HashMap<Integer, Connection> inputs;
+    private Neuron[] inputs;
+    public float[] weights;
     private float bias;
-    private boolean fired;
+    public boolean fired;
     private float data;
     private float output;
     private float error;
@@ -17,7 +18,7 @@ class Neuron {
     private float derivative;
     public boolean isOutputUnit = false;
 
-    Neuron (float bias, int id) {
+    Neuron (float bias, int id, Neuron[] inputs) {
         this.id = id;
         this.error = 0;
         this.output = 0;
@@ -25,15 +26,12 @@ class Neuron {
         this.bias = bias;
         this.derivative = 0;
         fired = false;
-        inputs = new HashMap<>();
-    }
-
-    void connect (List<Neuron> neurons) {
-        for (Neuron n : neurons) {
+        this.inputs = inputs;
+        this.weights = new float[inputs.length];
+        for (int x = 0; x < weights.length; x++){
             float tmpWeight = (float) Math.random();
             tmpWeight *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
-            Connection cn = new Connection(n, this, tmpWeight);
-            inputs.put(n.id, cn);
+            weights[x] = tmpWeight;
         }
     }
 
@@ -42,11 +40,13 @@ class Neuron {
     }
 
     float fire () {
-        if (inputs.size() > 0) {
+        if (fired) {
+            return output;
+        }
+        if (inputs.length > 0) {
             float totalInput = 0;
-            for (Map.Entry<Integer, Connection> cEntry : inputs.entrySet()){
-                Connection c = cEntry.getValue();
-                totalInput += (c.getInput().fire() * c.getWeight());
+            for (int i = 0; i < inputs.length; i++) {
+                totalInput += inputs[i].fire() * weights[i];
             }
             value = totalInput+bias;
             if (isOutputUnit) {
@@ -62,10 +62,6 @@ class Neuron {
             output = data;
             return output;
         }
-    }
-
-    public boolean isFired () {
-        return fired;
     }
 
     private float sigmoid(float value){
@@ -87,7 +83,7 @@ class Neuron {
         this.output = output;
     }
 
-    HashMap<Integer, Connection> getInputs() { return inputs; }
+    Neuron[] getInputs() { return inputs; }
 
     public void setError(float error) {
         this.error = error;

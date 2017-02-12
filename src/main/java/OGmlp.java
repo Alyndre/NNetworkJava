@@ -49,7 +49,7 @@ public class OGmlp {
                     output[i] = (float) (1 / (1 + Math.exp(-output[i])));
                 }
             } else {
-                output = softmax(output);
+                //output = softmax(output);
             }
             return Arrays.copyOf(output, output.length);
         }
@@ -119,7 +119,7 @@ public class OGmlp {
         float[] calcOut = run(input);
         float[] error = new float[calcOut.length];
         for (int i = 0; i < error.length; i++) {
-            error[i] = -1 * targetOutput[i] * (float)Math.log(calcOut[i]); // negative error
+            error[i] = targetOutput[i] - calcOut[i]; // negative error
         }
         for (int i = layers.length - 1; i >= 0; i--) {
             error = layers[i].train(error, learningRate, momentum);
@@ -153,7 +153,7 @@ public class OGmlp {
             }
             System.out.println("Epoch: " + e);
 
-            if ((e + 1) % 50 == 0) {
+            if ((e + 1) % 500 == 0) {
                 System.out.println();
                 for (int i = 0; i < validationData.getData().length; i++) {
                     float[] t = validationData.getData()[i];

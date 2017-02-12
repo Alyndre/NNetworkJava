@@ -9,12 +9,18 @@ public class Layer {
     float[] input;
     float[] weights;
     float[] dweights;
+    public OutputFunction outputFunction;
 
-    public Layer (int inputSize, int outputSize) {
-        output = new float[outputSize];
-        input = new float[inputSize];
-        weights = new float[inputSize * outputSize];
-        dweights = new float[weights.length];
+    public enum OutputFunction {
+        SOFTMAX, SIGMOID
+    }
+
+    public Layer (int inputSize, int outputSize, OutputFunction outputFunction) {
+        this.output = new float[outputSize];
+        this.input = new float[inputSize];
+        this.weights = new float[inputSize * outputSize];
+        this.dweights = new float[weights.length];
+        this.outputFunction = outputFunction;
         initWeights();
     }
 

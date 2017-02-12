@@ -32,7 +32,8 @@ public class MnistData implements Data {
                 float[] ex = new float[numOutput];
                 for (int p = 0; p < numberOfPixels; p++) {
                     int x = inImage.read();
-                    imgData[p] = x / 255;
+                    float val = x/255f;
+                    imgData[p] = val;
                 }
                 this.data[i] = imgData;
 
@@ -54,7 +55,8 @@ public class MnistData implements Data {
         try {
             for (int p = 0; p < numberOfPixels; p++) {
                 int x = inImage.read();
-                imgData[p] = x/255;
+                float val = x/255f;
+                imgData[p] = val;
             }
             data[dataCount] = imgData;
             dataCount++;
