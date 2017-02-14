@@ -6,7 +6,6 @@ import data.XORData;
 import network.MLP.MLPTrainer;
 import network.MLP.MultiLayerPerceptron;
 import network.Trainer;
-import network.Network;
 //import static spark.Spark.*;
 
 public class Main {
@@ -26,9 +25,9 @@ public class Main {
 
         Data data = new XORData();
 
-        Network network = new MultiLayerPerceptron(inputs, outputs, hidden);
+        MultiLayerPerceptron network = new MultiLayerPerceptron(inputs, outputs, hidden);
         network.debug = false;
-        Trainer trainer = new MLPTrainer((MultiLayerPerceptron) network, learnRate, momentum, data, 10000);
+        Trainer trainer = new MLPTrainer( network, learnRate, momentum, data, 10000);
 
         trainer.start();
         try {
@@ -66,8 +65,8 @@ public class Main {
         data.loadData();
         System.out.println("Data loaded!");
 
-        Network network = new MultiLayerPerceptron(inputs, outputs, hidden);
-        Trainer trainer = new MLPTrainer((MultiLayerPerceptron) network, learnRate, momentum, data, 5000);
+        MultiLayerPerceptron network = new MultiLayerPerceptron(inputs, outputs, hidden);
+        Trainer trainer = new MLPTrainer(network, learnRate, momentum, data, 500);
 
         trainer.start();
         try {
@@ -76,7 +75,7 @@ public class Main {
             System.out.println("InterruptedException: " + e.getMessage());
         }
 
-        for (int i = 0; i < validationData.getData().length; i++){
+        for (int i = 0; i < 100; i++){
             System.out.println("Expected: " + validationData.expectedNumber[i]);
             float [] res = network.evaluate(validationData.getData()[i]);
             for (double d : res){

@@ -1,17 +1,15 @@
 package network.SOM;
 
-import network.Network;
 import network.Trainer;
 
-public class SelfOrganizingMap extends Network {
+public class SelfOrganizingMap {
 
     private Trainer trainer;
     public Matrix matrix;
 
     public SelfOrganizingMap(int width, int height, int inputDimensions, Trainer trainer) {
-        super(Type.SOM);
         System.out.println("Assembling network...");
-        System.out.println("Type of network: " + this.getType());
+        System.out.println("Type of network: SOM");
 
         System.out.println("Creating matrix...");
 
@@ -22,7 +20,6 @@ public class SelfOrganizingMap extends Network {
         System.out.println("Network online!");
     }
 
-    @Override
     public float[] evaluate(float[] data) {
         return new float[0];
     }

@@ -1,18 +1,19 @@
 package network.MLP;
 
-import network.Network;
 import java.util.ArrayList;
 
-public class MultiLayerPerceptron extends Network {
+public class MultiLayerPerceptron {
+
+    public boolean debug = false;
+    private long numNeurons = 0;
 
     private Neuron[] inputList;
     private Neuron[] outputList;
     private ArrayList<Neuron[]> hiddenLayers;
 
     public MultiLayerPerceptron(int inputs, int outputs, int[] hidden){
-        super(Type.MLP);
         log("Assembling network...");
-        log("Type of network: " + this.getType());
+        log("Type of network: MLP");
 
         int id = 0;
         int sumNeurons = 0;
@@ -133,6 +134,16 @@ public class MultiLayerPerceptron extends Network {
 
     ArrayList<Neuron[]> getHiddenLayers() {
         return hiddenLayers;
+    }
+
+    public void log(String message) {
+        if (debug) {
+            System.out.println(message);
+        }
+    }
+
+    public void setNumNeurons(long numNeurons) {
+        this.numNeurons = numNeurons;
     }
 
 }
