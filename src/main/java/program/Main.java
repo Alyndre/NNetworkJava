@@ -16,7 +16,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-/*
+
         int inputs = 2;
         int outputs = 2;
         int[] hidden = {4};
@@ -43,9 +43,9 @@ public class Main {
             System.out.println("Expected: " + data.getExpected()[i][0] + " - " + data.getExpected()[i][1]);
             System.out.println("Network eval: " + res[0] + " - " + res[1]);
             i++;
-        }*/
+        }
 
-
+/*
         String inputImagePath = "src/main/resources/train-images.idx3-ubyte";
         String inputLabelPath = "src/main/resources/train-labels.idx1-ubyte";
         MnistData data = new MnistData(inputImagePath, inputLabelPath, 10);
@@ -81,7 +81,7 @@ public class Main {
             for (double d : res){
                 System.out.println("Output: " + d);
             }
-        }
+        }*/
 
 
         /*get("/", (request, response) -> {
