@@ -11,20 +11,26 @@ class Neuron {
     private float output;
     private float derivative;
     boolean isOutputUnit = false;
+    public OutputFunction outputFunction;
 
-    Neuron (float bias, int id, Neuron[] inputs) {
+    public enum OutputFunction {
+        SOFTMAX, HYPERTAN, NONE
+    }
+
+    Neuron (float bias, int id, Neuron[] inputs, OutputFunction outputFunction) {
         this.id = id;
         this.output = 0;
         this.data = 0;
         this.bias = bias;
         this.derivative = 0;
-        fired = false;
+        this.fired = false;
         this.inputs = inputs;
         this.weights = new float[inputs.length];
+        this.outputFunction = outputFunction;
         for (int x = 0; x < weights.length; x++){
             float tmpWeight = (float) Math.random();
             tmpWeight *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
-            weights[x] = tmpWeight;
+            this.weights[x] = tmpWeight;
         }
     }
 
@@ -42,11 +48,22 @@ class Neuron {
                 value += inputs[i].fire() * weights[i];
             }
             value += bias;
-            if (isOutputUnit) {
-                output = value;
-            } else {
-                output = sigmoid(value);
+
+            switch (outputFunction){
+                case SOFTMAX:
+                    output = sigmoid(value);
+                    break;
+                case HYPERTAN:
+                    output = hyperTan(value);
+                    break;
+                case NONE:
+                    output = value;
+                    break;
+                default:
+                    output = value;
+                    break;
             }
+
             fired = true;
             return output;
         }

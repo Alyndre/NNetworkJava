@@ -22,12 +22,11 @@ public class MultiLayerPerceptron {
         hiddenLayers = new ArrayList<>();
         outputList = new Neuron[outputs];
 
-
         log("Creating input layer...");
 
         for (int i = 0; i < inputs; i++){
             id++;
-            Neuron n = new Neuron(0, id, new Neuron[0]);
+            Neuron n = new Neuron(0, id, new Neuron[0], Neuron.OutputFunction.SOFTMAX);
             inputList[i] = n;
         }
         log("Input layer created!");
@@ -45,7 +44,7 @@ public class MultiLayerPerceptron {
                 } else {
                     prevLayer = hiddenLayers.get(x-1);
                 }
-                Neuron n = new Neuron((float)Math.random(), id, prevLayer);
+                Neuron n = new Neuron((float)Math.random(), id, prevLayer, Neuron.OutputFunction.SOFTMAX);
                 layer[i] = n;
             }
             hiddenLayers.add(layer);
@@ -55,7 +54,7 @@ public class MultiLayerPerceptron {
         log("Creating output layer...");
         for (int i = 0; i < outputs; i++){
             id++;
-            Neuron n = new Neuron(0, id, hiddenLayers.get(hiddenLayers.size()-1));
+            Neuron n = new Neuron(0, id, hiddenLayers.get(hiddenLayers.size()-1), Neuron.OutputFunction.NONE);
             n.isOutputUnit = true;
             outputList[i] = n;
         }
@@ -67,6 +66,7 @@ public class MultiLayerPerceptron {
     }
 
     public float[] evaluate(float[] data){
+        resetNeurons();
         float[] results = new float[outputList.length];
         if (data.length == inputList.length){
             for (int x = 0; x<data.length; x++) {
@@ -86,7 +86,6 @@ public class MultiLayerPerceptron {
             n.setOutput(softmaxed[x]);
         }
 
-        resetNeurons();
         return softmaxed;
     }
 
