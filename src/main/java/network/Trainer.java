@@ -13,6 +13,8 @@ public abstract class Trainer implements Runnable {
 
     protected abstract void train(Data data, int iterations);
 
+    //protected abstract void train(Data data, float stopError);
+
     public void start(){
         runner = new Thread(this);
         runner.setPriority(Thread.MIN_PRIORITY);

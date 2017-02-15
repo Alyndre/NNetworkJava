@@ -56,7 +56,7 @@ public class MLPTrainer extends Trainer {
 
     private void backpropagation(float[] expected){
         //SEEMS TO WORK, BUT MAYBE SOMETHING IS WRONG: CHECK https://mattmazur.com/2015/03/17/a-step-by-step-backpropagation-example/
-        //TOO SLOW!
+        //56s -> 20s!
 
         Neuron[] outputList = this.multiLayerPerceptron.getOutputList();
         ArrayList<Neuron[]> hiddenLayers = this.multiLayerPerceptron.getHiddenLayers();
@@ -108,7 +108,8 @@ public class MLPTrainer extends Trainer {
                 float deltaWeight = 1*learningRate*n.getDerivative()*inputs[i].getOutput();
                 n.weights[i] = n.weights[i] + (deltaWeight * momentum);
             }
-            //double deltaBias = -1*learningRate*n.getDerivative();
+            float deltaBias = -1*learningRate*n.getDerivative();
+            n.setBias(n.getBias()+deltaBias);
         }
 
         for (int l = hiddenLayers.size()-1; l >= 0; l--) {
@@ -119,8 +120,8 @@ public class MLPTrainer extends Trainer {
                     float deltaWeight = 1*learningRate*n.getDerivative()*inputs[i].getOutput();
                     n.weights[i] = n.weights[i] + (deltaWeight * momentum);
                 }
-                /*float deltaBias = 1*learningRate*n.getDerivative();
-                n.setBias(n.getBias()+deltaBias);*/
+                float deltaBias = 1*learningRate*n.getDerivative();
+                n.setBias(n.getBias()+deltaBias);
             }
         }
     }
