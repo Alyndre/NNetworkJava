@@ -34,6 +34,11 @@ public class SOMTrainer extends Trainer {
         //TODO: TRAIN
     }
 
+    @Override
+    protected void train(Data data, float stopError){
+
+    }
+
     public void adjustWeights(Node node, double[] inputs, double learningRate, double distanceFalloff) {
         double weight;
         double input;

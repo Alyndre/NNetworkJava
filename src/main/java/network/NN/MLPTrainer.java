@@ -1,26 +1,21 @@
-package network.MLP;
+package network.NN;
 
 import data.Data;
 import network.Trainer;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.*;
 
 public class MLPTrainer extends Trainer {
 
-    private MultiLayerPerceptron multiLayerPerceptron;
+    private NeuralNetwork neuralNetwork;
     private Data data;
     private float learningRate;
     private float momentum;
     private int iterations;
 
-    public MLPTrainer(MultiLayerPerceptron multiLayerPerceptron, float learningRate, float momentum, Data data, int iterations){
+    public MLPTrainer(NeuralNetwork neuralNetwork, float learningRate, float momentum, Data data, int iterations){
         super();
-        this.multiLayerPerceptron = multiLayerPerceptron;
+        this.neuralNetwork = neuralNetwork;
         this.learningRate = learningRate;
         this.momentum = momentum;
         this.data = data;
@@ -35,37 +30,38 @@ public class MLPTrainer extends Trainer {
 
     @Override
     protected void train(Data data, int iterations){
-        this.multiLayerPerceptron.log("Training network...");
+        this.neuralNetwork.log("Training network...");
         try {
             for (int j = 0; j<iterations; j++) {
-                System.out.println("Epoch:" + j);
+                long startTime = new Date().getTime();
                 for(int i = 0; i<data.getTotalData(); i++) {//data.getTotalData()
                     float[] d = data.getData()[i];
-                    this.multiLayerPerceptron.log("Data: " + d[0] + " - " + d[1]);
-                    this.multiLayerPerceptron.evaluate(d);
+                    this.neuralNetwork.log("Data: " + d[0] + " - " + d[1]);
+                    this.neuralNetwork.evaluate(d);
                     backpropagation(data.getExpected()[i]);
                 }
                 //data.resetData();
                 //data.shuffle();
+                long finishTime = new Date().getTime();
+                long time = finishTime - startTime;
+                System.out.println("Epoch num. " + (j+1) + " of " + iterations + " Completed in: " + time + " data processed: " + data.getTotalData());
             }
         } catch (Exception e){
-            this.multiLayerPerceptron.log("Train error: " + e.getMessage());
+            this.neuralNetwork.log("Train error: " + e.getMessage());
         }
-        this.multiLayerPerceptron.log("Training done!");
+        this.neuralNetwork.log("Training done!");
+    }
+
+    @Override
+    protected void train(Data data, float stopError){
+
     }
 
     private void backpropagation(float[] expected){
-        //SEEMS TO WORK, BUT MAYBE SOMETHING IS WRONG: CHECK https://mattmazur.com/2015/03/17/a-step-by-step-backpropagation-example/
         //56s -> 20s!
 
-        Neuron[] outputList = this.multiLayerPerceptron.getOutputList();
-        ArrayList<Neuron[]> hiddenLayers = this.multiLayerPerceptron.getHiddenLayers();
-
-        String exp = "Expected: ";
-        for(float d : expected) {
-            exp+=d+" - ";
-        }
-        this.multiLayerPerceptron.log(exp);
+        Neuron[] outputList = this.neuralNetwork.getOutputList();
+        ArrayList<Neuron[]> hiddenLayers = this.neuralNetwork.getHiddenLayers();
 
         //Output layer
         double error = 0;
@@ -78,7 +74,7 @@ public class MLPTrainer extends Trainer {
             x++;
         }
 
-        this.multiLayerPerceptron.log("CROSS ENTROPY ERROR: " + error);
+        this.neuralNetwork.log("CROSS ENTROPY ERROR: " + error);
 
         for (int i = hiddenLayers.size()-1; i >= 0; i--){
             Neuron[] l = hiddenLayers.get(i);
@@ -92,16 +88,26 @@ public class MLPTrainer extends Trainer {
                 } else {
                     nextLayer = hiddenLayers.get(i+1);
                 }
+                //TODO: cambiar hiddenLayers per a que sigui nomes un llistat de neurones. S'ha de cambiar com agafar les neurones que reben a X com a input
                 for (int w = 0; w<nextLayer.length; w++){
                     sumK += nextLayer[w].getDerivative() * nextLayer[w].weights[z];
                 }
                 float oJ = n.getOutput();
                 float derivativeJ = derivate(oJ) * sumK;
                 n.setDerivative(derivativeJ);
+
+                Neuron[] inputs = n.getInputs();
+                for (int w = 0; w<inputs.length; w++){
+                    float deltaWeight = 1*learningRate*n.getDerivative()*inputs[w].getOutput();
+                    n.weights[w] = n.weights[w] + (deltaWeight * momentum);
+                }
+                float deltaBias = 1*learningRate*n.getDerivative();
+                n.setBias(n.getBias()+deltaBias);
+
             }
         }
 
-        //Calc deltaWeight
+        //Calc deltaWeight of outputLayer
         for (Neuron n : outputList){
             Neuron[] inputs = n.getInputs();
             for (int i = 0; i<inputs.length; i++){
@@ -110,19 +116,6 @@ public class MLPTrainer extends Trainer {
             }
             float deltaBias = -1*learningRate*n.getDerivative();
             n.setBias(n.getBias()+deltaBias);
-        }
-
-        for (int l = hiddenLayers.size()-1; l >= 0; l--) {
-            Neuron[] layer = hiddenLayers.get(l);
-            for (Neuron n : layer) {
-                Neuron[] inputs = n.getInputs();
-                for (int i = 0; i<inputs.length; i++){
-                    float deltaWeight = 1*learningRate*n.getDerivative()*inputs[i].getOutput();
-                    n.weights[i] = n.weights[i] + (deltaWeight * momentum);
-                }
-                float deltaBias = 1*learningRate*n.getDerivative();
-                n.setBias(n.getBias()+deltaBias);
-            }
         }
     }
 

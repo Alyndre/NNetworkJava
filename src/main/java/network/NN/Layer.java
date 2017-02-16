@@ -1,4 +1,4 @@
-package network.MLP;
+package network.NN;
 
 import java.util.Arrays;
 

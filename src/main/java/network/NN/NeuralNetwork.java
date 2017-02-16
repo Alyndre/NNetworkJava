@@ -1,8 +1,8 @@
-package network.MLP;
+package network.NN;
 
 import java.util.ArrayList;
 
-public class MultiLayerPerceptron {
+public class NeuralNetwork {
 
     public boolean debug = false;
     private long numNeurons = 0;
@@ -11,7 +11,7 @@ public class MultiLayerPerceptron {
     private Neuron[] outputList;
     private ArrayList<Neuron[]> hiddenLayers;
 
-    public MultiLayerPerceptron(int inputs, int outputs, int[] hidden){
+    public NeuralNetwork(int inputs, int outputs, int[] hidden){
         log("Assembling network...");
         log("Type of network: MLP");
 
