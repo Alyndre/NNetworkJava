@@ -1,10 +1,9 @@
 package program;
 
 import data.Data;
-import data.MnistData;
 import data.XORData;
-import network.NN.MLPTrainer;
-import network.NN.NeuralNetwork;
+import network.MLP.MLPTrainer;
+import network.MLP.MultiLayerPerceptron;
 import network.Trainer;
 //import static spark.Spark.*;
 
@@ -25,7 +24,7 @@ public class Main {
 
         Data data = new XORData();
 
-        NeuralNetwork network = new NeuralNetwork(inputs, outputs, hidden);
+        MultiLayerPerceptron network = new MultiLayerPerceptron(inputs, outputs, hidden);
         network.debug = false;
         Trainer trainer = new MLPTrainer( network, learnRate, momentum, data, 500);
 
@@ -65,7 +64,7 @@ public class Main {
         data.loadData();
         System.out.println("Data loaded!");
 
-        NeuralNetwork network = new NeuralNetwork(inputs, outputs, hidden);
+        MultiLayerPerceptron network = new MultiLayerPerceptron(inputs, outputs, hidden);
         Trainer trainer = new MLPTrainer(network, learnRate, momentum, data, 500);
 
         trainer.start();

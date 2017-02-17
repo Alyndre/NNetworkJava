@@ -1,21 +1,21 @@
-package network.NN;
+package network.GANN;
 
 import data.Data;
 import network.Trainer;
 
 import java.util.*;
 
-public class MLPTrainer extends Trainer {
+public class NNTrainer extends Trainer {
 
-    private NeuralNetwork neuralNetwork;
+    private GeneticNeuralNetwork geneticNeuralNetwork;
     private Data data;
     private float learningRate;
     private float momentum;
     private int iterations;
 
-    public MLPTrainer(NeuralNetwork neuralNetwork, float learningRate, float momentum, Data data, int iterations){
+    public NNTrainer(GeneticNeuralNetwork geneticNeuralNetwork, float learningRate, float momentum, Data data, int iterations){
         super();
-        this.neuralNetwork = neuralNetwork;
+        this.geneticNeuralNetwork = geneticNeuralNetwork;
         this.learningRate = learningRate;
         this.momentum = momentum;
         this.data = data;
@@ -30,14 +30,14 @@ public class MLPTrainer extends Trainer {
 
     @Override
     protected void train(Data data, int iterations){
-        this.neuralNetwork.log("Training network...");
+        this.geneticNeuralNetwork.log("Training network...");
         try {
             for (int j = 0; j<iterations; j++) {
                 long startTime = new Date().getTime();
                 for(int i = 0; i<data.getTotalData(); i++) {//data.getTotalData()
                     float[] d = data.getData()[i];
-                    this.neuralNetwork.log("Data: " + d[0] + " - " + d[1]);
-                    this.neuralNetwork.evaluate(d);
+                    this.geneticNeuralNetwork.log("Data: " + d[0] + " - " + d[1]);
+                    this.geneticNeuralNetwork.evaluate(d);
                     backpropagation(data.getExpected()[i]);
                 }
                 //data.resetData();
@@ -47,9 +47,9 @@ public class MLPTrainer extends Trainer {
                 System.out.println("Epoch num. " + (j+1) + " of " + iterations + " Completed in: " + time + " data processed: " + data.getTotalData());
             }
         } catch (Exception e){
-            this.neuralNetwork.log("Train error: " + e.getMessage());
+            this.geneticNeuralNetwork.log("Train error: " + e.getMessage());
         }
-        this.neuralNetwork.log("Training done!");
+        this.geneticNeuralNetwork.log("Training done!");
     }
 
     @Override
@@ -60,8 +60,8 @@ public class MLPTrainer extends Trainer {
     private void backpropagation(float[] expected){
         //56s -> 20s!
 
-        Neuron[] outputList = this.neuralNetwork.getOutputList();
-        ArrayList<Neuron[]> hiddenLayers = this.neuralNetwork.getHiddenLayers();
+        Neuron[] outputList = this.geneticNeuralNetwork.getOutputList();
+        ArrayList<Neuron[]> hiddenLayers = this.geneticNeuralNetwork.getHiddenLayers();
 
         //Output layer
         double error = 0;
@@ -74,7 +74,7 @@ public class MLPTrainer extends Trainer {
             x++;
         }
 
-        this.neuralNetwork.log("CROSS ENTROPY ERROR: " + error);
+        this.geneticNeuralNetwork.log("CROSS ENTROPY ERROR: " + error);
 
         for (int i = hiddenLayers.size()-1; i >= 0; i--){
             Neuron[] l = hiddenLayers.get(i);

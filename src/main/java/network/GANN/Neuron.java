@@ -1,31 +1,35 @@
-package network.NN;
+package network.GANN;
+
+import java.util.ArrayList;
+import java.util.List;
 
 class Neuron {
 
     int id = 0;
-    private Neuron[] inputs;
+    public List<Neuron> inputs;
+    public List<Neuron> outputs;
     float[] weights;
     private float bias;
     boolean fired;
     private float data;
     private float output;
     private float derivative;
-    boolean isOutputUnit = false;
     public OutputFunction outputFunction;
 
     public enum OutputFunction {
         SOFTMAX, HYPERTAN, NONE
     }
 
-    Neuron (float bias, int id, Neuron[] inputs, OutputFunction outputFunction) {
+    Neuron (int id, OutputFunction outputFunction, float bias) {
         this.id = id;
         this.output = 0;
         this.data = 0;
         this.bias = bias;
         this.derivative = 0;
         this.fired = false;
-        this.inputs = inputs;
-        this.weights = new float[inputs.length];
+        this.inputs = new ArrayList<>();
+        this.outputs = new ArrayList<>();
+        this.weights = new float[inputs.size()];
         this.outputFunction = outputFunction;
         for (int x = 0; x < weights.length; x++){
             float tmpWeight = (float) Math.random();
@@ -42,10 +46,10 @@ class Neuron {
         if (fired) {
             return output;
         }
-        if (inputs.length > 0) {
+        if (inputs.size() > 0) {
             float value = 0;
-            for (int i = 0; i < inputs.length; i++) {
-                value += inputs[i].fire() * weights[i];
+            for (int i = 0; i < inputs.size(); i++) {
+                value += inputs.get(i).fire() * weights[i];
             }
             value += bias;
 
@@ -92,8 +96,6 @@ class Neuron {
     public void setOutput(float output) {
         this.output = output;
     }
-
-    Neuron[] getInputs() { return inputs; }
 
     void setDerivative(float derivative) { this.derivative = derivative; }
 

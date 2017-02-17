@@ -1,66 +1,44 @@
-package network.NN;
+package network.GANN;
+
+import genetics.Genome;
+import genetics.genes.ConnectionGene;
+import genetics.genes.NodeGene;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class NeuralNetwork {
+public class GeneticNeuralNetwork {
 
     public boolean debug = false;
     private long numNeurons = 0;
 
-    private Neuron[] inputList;
-    private Neuron[] outputList;
-    private ArrayList<Neuron[]> hiddenLayers;
+    private List<Neuron> inputNeurons;
+    private List<Neuron> hiddenNeurons;
+    private List<Neuron> outputNeurons;
 
-    public NeuralNetwork(int inputs, int outputs, int[] hidden){
+    public GeneticNeuralNetwork(Genome genome){
         log("Assembling network...");
-        log("Type of network: MLP");
 
-        int id = 0;
-        int sumNeurons = 0;
+        inputNeurons = new ArrayList<>();
+        hiddenNeurons = new ArrayList<>();
+        outputNeurons = new ArrayList<>();
 
-        inputList = new Neuron[inputs];
-        hiddenLayers = new ArrayList<>();
-        outputList = new Neuron[outputs];
-
-        log("Creating input layer...");
-
-        for (int i = 0; i < inputs; i++){
-            id++;
-            Neuron n = new Neuron(0, id, new Neuron[0], Neuron.OutputFunction.SOFTMAX);
-            inputList[i] = n;
-        }
-        log("Input layer created!");
-
-        log("Creating hidden layers...");
-        log("Number of hidden layers: " + hidden.length);
-        for (int x = 0; x<hidden.length; x++){
-            int l = hidden[x];
-            Neuron[] prevLayer;
-            Neuron[] layer = new Neuron[l];
-            for (int i = 0; i<l; i++){
-                id++;
-                if (x==0){
-                    prevLayer = inputList;
-                } else {
-                    prevLayer = hiddenLayers.get(x-1);
-                }
-                Neuron n = new Neuron((float)Math.random(), id, prevLayer, Neuron.OutputFunction.SOFTMAX);
-                layer[i] = n;
+        for (NodeGene gene : genome.nodeGenes) {
+            switch (gene.nodeType) {
+                case INPUT:
+                    inputNeurons.add(new Neuron(gene.id, Neuron.OutputFunction.SOFTMAX, 0)); break;
+                case OUTPUT:
+                    outputNeurons.add(new Neuron(gene.id, Neuron.OutputFunction.NONE, 0)); break;
+                case HIDDEN:
+                    hiddenNeurons.add(new Neuron(gene.id, Neuron.OutputFunction.SOFTMAX, 0)); break;
             }
-            hiddenLayers.add(layer);
         }
-        log("Hidden layers created!");
 
-        log("Creating output layer...");
-        for (int i = 0; i < outputs; i++){
-            id++;
-            Neuron n = new Neuron(0, id, hiddenLayers.get(hiddenLayers.size()-1), Neuron.OutputFunction.NONE);
-            n.isOutputUnit = true;
-            outputList[i] = n;
+        for (ConnectionGene gene : genome.connectionGenes){
+            if (gene.enabled) {
+
+            }
         }
-        log("Output layer created!");
-
-        setNumNeurons(sumNeurons);
 
         log("Network online!");
     }
