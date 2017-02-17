@@ -8,7 +8,7 @@ class Neuron {
     int id = 0;
     public List<Neuron> inputs;
     public List<Neuron> outputs;
-    float[] weights;
+    public List<Float> weights;
     private float bias;
     boolean fired;
     private float data;
@@ -29,7 +29,7 @@ class Neuron {
         this.fired = false;
         this.inputs = new ArrayList<>();
         this.outputs = new ArrayList<>();
-        this.weights = new float[inputs.size()];
+        this.weights = new ArrayList<>();
         this.outputFunction = outputFunction;
         for (int x = 0; x < weights.length; x++){
             float tmpWeight = (float) Math.random();

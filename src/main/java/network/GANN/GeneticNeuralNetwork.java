@@ -5,6 +5,7 @@ import genetics.genes.ConnectionGene;
 import genetics.genes.NodeGene;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class GeneticNeuralNetwork {
@@ -15,6 +16,7 @@ public class GeneticNeuralNetwork {
     private List<Neuron> inputNeurons;
     private List<Neuron> hiddenNeurons;
     private List<Neuron> outputNeurons;
+    private HashMap<Integer, Neuron> neuronsMap;
 
     public GeneticNeuralNetwork(Genome genome){
         log("Assembling network...");
@@ -24,19 +26,33 @@ public class GeneticNeuralNetwork {
         outputNeurons = new ArrayList<>();
 
         for (NodeGene gene : genome.nodeGenes) {
+            Neuron n;
             switch (gene.nodeType) {
                 case INPUT:
-                    inputNeurons.add(new Neuron(gene.id, Neuron.OutputFunction.SOFTMAX, 0)); break;
+                    n = new Neuron(gene.id, Neuron.OutputFunction.SOFTMAX, 0);
+                    inputNeurons.add(n);
+                    neuronsMap.put(gene.id, n);
+                    break;
                 case OUTPUT:
-                    outputNeurons.add(new Neuron(gene.id, Neuron.OutputFunction.NONE, 0)); break;
+                    n = new Neuron(gene.id, Neuron.OutputFunction.NONE, 0);
+                    outputNeurons.add(n);
+                    neuronsMap.put(gene.id, n);
+                    break;
                 case HIDDEN:
-                    hiddenNeurons.add(new Neuron(gene.id, Neuron.OutputFunction.SOFTMAX, 0)); break;
+                    n = new Neuron(gene.id, Neuron.OutputFunction.SOFTMAX, 0);
+                    hiddenNeurons.add(n);
+                    neuronsMap.put(gene.id, n);
+                    break;
             }
         }
 
         for (ConnectionGene gene : genome.connectionGenes){
             if (gene.enabled) {
-
+                Neuron n = neuronsMap.get(gene.outputId);
+                Neuron ni = neuronsMap.get(gene.inputId);
+                n.weights.add(gene.weight);
+                n.inputs.add(ni);
+                ni.outputs.add(n);
             }
         }
 
@@ -101,26 +117,9 @@ public class GeneticNeuralNetwork {
         }
     }
 
-    Neuron[] getInputList() {
-        return inputList;
-    }
-
-    Neuron[] getOutputList() {
-        return outputList;
-    }
-
-    ArrayList<Neuron[]> getHiddenLayers() {
-        return hiddenLayers;
-    }
-
     public void log(String message) {
         if (debug) {
             System.out.println(message);
         }
     }
-
-    public void setNumNeurons(long numNeurons) {
-        this.numNeurons = numNeurons;
-    }
-
 }
