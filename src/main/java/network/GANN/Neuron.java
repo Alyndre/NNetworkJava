@@ -6,15 +6,15 @@ import java.util.List;
 class Neuron {
 
     int id = 0;
-    public List<Neuron> inputs;
-    public List<Neuron> outputs;
-    public List<Float> weights;
-    private float bias;
+    List<Neuron> inputs;
+    List<Neuron> outputs;
+    List<Float> weights;
+    float bias;
     boolean fired;
     private float data;
-    private float output;
-    private float derivative;
-    public OutputFunction outputFunction;
+    float output;
+    float derivative;
+    private OutputFunction outputFunction;
 
     public enum OutputFunction {
         SOFTMAX, HYPERTAN, NONE
@@ -31,11 +31,6 @@ class Neuron {
         this.outputs = new ArrayList<>();
         this.weights = new ArrayList<>();
         this.outputFunction = outputFunction;
-        for (int x = 0; x < weights.length; x++){
-            float tmpWeight = (float) Math.random();
-            tmpWeight *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
-            this.weights[x] = tmpWeight;
-        }
     }
 
     void feed (float data) {
@@ -49,7 +44,7 @@ class Neuron {
         if (inputs.size() > 0) {
             float value = 0;
             for (int i = 0; i < inputs.size(); i++) {
-                value += inputs.get(i).fire() * weights[i];
+                value += inputs.get(i).fire() * weights.get(i);
             }
             value += bias;
 
@@ -88,21 +83,5 @@ class Neuron {
         else if (x > 20.0) return 1;
         else return (float) Math.tanh(x);
     }
-
-    float getOutput() {
-        return output;
-    }
-
-    public void setOutput(float output) {
-        this.output = output;
-    }
-
-    void setDerivative(float derivative) { this.derivative = derivative; }
-
-    float getDerivative() { return derivative; }
-
-    public void setBias(float bias) { this.bias = bias; }
-
-    public float getBias() { return bias; }
 
 }

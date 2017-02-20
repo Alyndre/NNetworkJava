@@ -58,64 +58,65 @@ public class NNTrainer extends Trainer {
     }
 
     private void backpropagation(float[] expected){
-        //56s -> 20s!
-
-        Neuron[] outputList = this.geneticNeuralNetwork.getOutputList();
-        ArrayList<Neuron[]> hiddenLayers = this.geneticNeuralNetwork.getHiddenLayers();
+        List<Neuron> outputNeurons = this.geneticNeuralNetwork.outputNeurons;
+        List<Neuron> hiddenNeurons = this.geneticNeuralNetwork.hiddenNeurons;
 
         //Output layer
         double error = 0;
         int x = 0;
-        for (Neuron n : outputList){
-            float out = n.getOutput();
+        for (Neuron n : outputNeurons){
+            float out = n.output;
             float g = expected[x]-out;
             error -= expected[x] * Math.log(out);
-            n.setDerivative(g);
+            n.derivative = g;
             x++;
         }
 
         this.geneticNeuralNetwork.log("CROSS ENTROPY ERROR: " + error);
 
-        for (int i = hiddenLayers.size()-1; i >= 0; i--){
-            Neuron[] l = hiddenLayers.get(i);
-            for (int z = 0; z<l.length; z++) {
-                Neuron n = l[z];
-                //Calculate the sum of the delta of the neurons of next layer times weight of that connection
-                float sumK = 0;
-                Neuron[] nextLayer;
-                if (i+1 == hiddenLayers.size()){
-                    nextLayer = outputList;
-                } else {
-                    nextLayer = hiddenLayers.get(i+1);
-                }
-                //TODO: cambiar hiddenLayers per a que sigui nomes un llistat de neurones. S'ha de cambiar com agafar les neurones que reben a X com a input
-                for (int w = 0; w<nextLayer.length; w++){
-                    sumK += nextLayer[w].getDerivative() * nextLayer[w].weights[z];
-                }
-                float oJ = n.getOutput();
-                float derivativeJ = derivate(oJ) * sumK;
-                n.setDerivative(derivativeJ);
 
-                Neuron[] inputs = n.getInputs();
-                for (int w = 0; w<inputs.length; w++){
-                    float deltaWeight = 1*learningRate*n.getDerivative()*inputs[w].getOutput();
-                    n.weights[w] = n.weights[w] + (deltaWeight * momentum);
-                }
-                float deltaBias = 1*learningRate*n.getDerivative();
-                n.setBias(n.getBias()+deltaBias);
-
-            }
+        for (Neuron n : outputNeurons){
+            List<Neuron> inputs = n.inputs;
+            calcDerivative(inputs);
         }
 
         //Calc deltaWeight of outputLayer
-        for (Neuron n : outputList){
-            Neuron[] inputs = n.getInputs();
-            for (int i = 0; i<inputs.length; i++){
-                float deltaWeight = 1*learningRate*n.getDerivative()*inputs[i].getOutput();
-                n.weights[i] = n.weights[i] + (deltaWeight * momentum);
+        for (Neuron n : outputNeurons){
+            List<Neuron> inputs = n.inputs;
+            for (int i = 0; i<inputs.size(); i++){
+                float deltaWeight = 1*learningRate*n.derivative*inputs.get(i).output;
+                n.weights.set(i, n.weights.get(i) + (deltaWeight * momentum));
             }
-            float deltaBias = -1*learningRate*n.getDerivative();
-            n.setBias(n.getBias()+deltaBias);
+            float deltaBias = -1*learningRate*n.derivative;
+            n.bias += deltaBias;
+        }
+
+        for (Neuron n : hiddenNeurons) {
+            List<Neuron> inputs = n.inputs;
+            for (int i = 0; i<inputs.size(); i++){
+                float deltaWeight = 1*learningRate*n.derivative*inputs.get(i).output;
+                n.weights.set(i, n.weights.get(i) + (deltaWeight * momentum));
+            }
+            float deltaBias = -1*learningRate*n.derivative;
+            n.bias += deltaBias;
+        }
+    }
+
+    private void calcDerivative(List<Neuron> neurons) {
+        for (int x = 0; x < neurons.size(); x++){
+            Neuron n = neurons.get(x);
+            float sumK = 0;
+            for (Neuron no : n.outputs){
+                sumK += no.derivative * no.weights.get(x);
+            }
+            float output = n.output;
+            n.derivative = derivate(output) * sumK;
+        }
+
+        for (Neuron n : neurons){
+            if (n.inputs.size() != 0){
+                calcDerivative(n.inputs);
+            }
         }
     }
 

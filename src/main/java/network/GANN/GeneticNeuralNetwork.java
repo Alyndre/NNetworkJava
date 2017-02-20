@@ -11,12 +11,11 @@ import java.util.List;
 public class GeneticNeuralNetwork {
 
     public boolean debug = false;
-    private long numNeurons = 0;
 
-    private List<Neuron> inputNeurons;
-    private List<Neuron> hiddenNeurons;
-    private List<Neuron> outputNeurons;
-    private HashMap<Integer, Neuron> neuronsMap;
+    List<Neuron> inputNeurons;
+    List<Neuron> hiddenNeurons;
+    List<Neuron> outputNeurons;
+    HashMap<Integer, Neuron> neuronsMap;
 
     public GeneticNeuralNetwork(Genome genome){
         log("Assembling network...");
@@ -61,23 +60,23 @@ public class GeneticNeuralNetwork {
 
     public float[] evaluate(float[] data){
         resetNeurons();
-        float[] results = new float[outputList.length];
-        if (data.length == inputList.length){
+        float[] results = new float[outputNeurons.size()];
+        if (data.length == inputNeurons.size()){
             for (int x = 0; x<data.length; x++) {
-                Neuron n = inputList[x];
+                Neuron n = inputNeurons.get(x);
                 n.feed(data[x]);
             }
-            for (int x = 0; x<outputList.length; x++){
-                Neuron n = outputList[x];
+            for (int x = 0; x<outputNeurons.size(); x++){
+                Neuron n = outputNeurons.get(x);
                 results[x] = n.fire();
             }
         } else {
             log("ERROR: Data length is different from input neurons");
         }
         float[] softmaxed = softmax(results);
-        for (int x = 0; x<outputList.length; x++){
-            Neuron n = outputList[x];
-            n.setOutput(softmaxed[x]);
+        for (int x = 0; x<outputNeurons.size(); x++){
+            Neuron n = outputNeurons.get(x);
+            n.output = softmaxed[x];
         }
 
         return softmaxed;
@@ -102,19 +101,7 @@ public class GeneticNeuralNetwork {
     }
 
     private void resetNeurons() {
-        for(Neuron n : inputList) {
-            n.fired = false;
-        }
-
-        for(Neuron n : outputList) {
-            n.fired = false;
-        }
-
-        for(Neuron[] neurons : hiddenLayers) {
-            for (Neuron n : neurons) {
-                n.fired = false;
-            }
-        }
+        neuronsMap.forEach((k,v) -> v.fired=false);
     }
 
     public void log(String message) {
