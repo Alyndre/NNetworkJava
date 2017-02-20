@@ -5,8 +5,9 @@ import data.MnistData;
 import data.XORData;
 import genetics.Genome;
 import genetics.genes.ConnectionGene;
-import genetics.genes.Gene;
 import genetics.genes.NodeGene;
+import network.GANN.GeneticNeuralNetwork;
+import network.GANN.NNTrainer;
 import network.MLP.MLPTrainer;
 import network.MLP.MultiLayerPerceptron;
 import network.Trainer;
@@ -21,9 +22,7 @@ public class Main {
     public static void main(String[] args) {
 
         startXORGANN();
-
         //startXORMLP();
-
         //startMnist();
     }
 
@@ -107,6 +106,29 @@ public class Main {
         tmpWeight *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
         genome.connectionGenes.add(new ConnectionGene(6, 8, tmpWeight, 0, true));
 
+        GeneticNeuralNetwork geneticNeuralNetwork = new GeneticNeuralNetwork(genome);
+
+        float momentum = 3.6f;
+        float learnRate = 0.5f;
+        Data data = new XORData();
+
+        Trainer trainer = new NNTrainer(geneticNeuralNetwork, learnRate, momentum, data, 500);
+
+        trainer.start();
+        try {
+            trainer.join();
+        } catch (InterruptedException e){
+            System.out.println("InterruptedException: " + e.getMessage());
+        }
+
+        int i = 0;
+        for (float[] d : data.getData()){
+            System.out.println(d[0]+","+d[1]);
+            float[] res = geneticNeuralNetwork.evaluate(d);
+            System.out.println("Expected: " + data.getExpected()[i][0] + " - " + data.getExpected()[i][1]);
+            System.out.println("Network eval: " + res[0] + " - " + res[1]);
+            i++;
+        }
     }
 
     private static void startXORMLP() {

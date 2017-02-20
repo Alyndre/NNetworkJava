@@ -11,7 +11,7 @@ import java.util.List;
 public class GeneticNeuralNetwork {
 
     public boolean debug = false;
-
+    public Genome genome;
     List<Neuron> inputNeurons;
     List<Neuron> hiddenNeurons;
     List<Neuron> outputNeurons;
@@ -20,9 +20,12 @@ public class GeneticNeuralNetwork {
     public GeneticNeuralNetwork(Genome genome){
         log("Assembling network...");
 
+        this.genome = genome;
+
         inputNeurons = new ArrayList<>();
         hiddenNeurons = new ArrayList<>();
         outputNeurons = new ArrayList<>();
+        neuronsMap = new HashMap<>();
 
         for (NodeGene gene : genome.nodeGenes) {
             Neuron n;
