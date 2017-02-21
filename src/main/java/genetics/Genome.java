@@ -10,10 +10,12 @@ public class Genome {
 
     public List<NodeGene> nodeGenes;
     public List<ConnectionGene> connectionGenes;
+    public float fitness;
 
     public Genome(){
         nodeGenes = new ArrayList<>();
         connectionGenes = new ArrayList<>();
+        fitness = 0;
     }
 
     public static Genome generateRandomGenome(int inputs, int outputs) {

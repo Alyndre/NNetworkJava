@@ -4,6 +4,7 @@ import data.Data;
 import data.MnistData;
 import data.XORData;
 import genetics.Genome;
+import genetics.Population;
 import genetics.genes.ConnectionGene;
 import genetics.genes.NodeGene;
 import network.GANN.GeneticNeuralNetwork;
@@ -27,11 +28,10 @@ public class Main {
     }
 
     private static void startXORGANN() {
-        Genome genome = Genome.generateXORExampleGenome();
+        Population population = new Population(100);
     }
 
     private static void startWorkingXORGANN() {
-
 
         GeneticNeuralNetwork geneticNeuralNetwork = new GeneticNeuralNetwork(Genome.generateXORExampleGenome());
 
