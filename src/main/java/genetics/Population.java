@@ -3,6 +3,7 @@ package genetics;
 import network.GANN.GeneticNeuralNetwork;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Population {
@@ -18,11 +19,13 @@ public class Population {
         }
     }
 
-    public void evaluateCurrentPopulation(float[] data) {
+    public void evaluateCurrentPopulation(float[] data, Fitness fitness) {
         for (Genome genome : genomes) {
             GeneticNeuralNetwork geneticNeuralNetwork = new GeneticNeuralNetwork(genome);
-            geneticNeuralNetwork.evaluate(data);
+            float[] output = geneticNeuralNetwork.evaluate(data);
+            genome.fitness = fitness.fitness(output);
         }
+        Collections.sort(genomes);
     }
 
 }

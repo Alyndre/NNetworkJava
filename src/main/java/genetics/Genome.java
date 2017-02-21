@@ -6,11 +6,11 @@ import genetics.genes.NodeGene;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Genome {
+public class Genome implements Comparable<Genome> {
 
     public List<NodeGene> nodeGenes;
     public List<ConnectionGene> connectionGenes;
-    public float fitness;
+    public int fitness;
 
     public Genome(){
         nodeGenes = new ArrayList<>();
@@ -114,5 +114,10 @@ public class Genome {
         tmpWeight *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
         genome.connectionGenes.add(new ConnectionGene(6, 8, tmpWeight, 0, true));
         return genome;
+    }
+
+    @Override
+    public int compareTo(Genome anotherGenome) {
+        return this.fitness - anotherGenome.fitness;
     }
 }
