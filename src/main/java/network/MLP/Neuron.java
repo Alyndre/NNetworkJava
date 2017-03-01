@@ -31,6 +31,7 @@ class Neuron {
             float tmpWeight = (float) Math.random();
             tmpWeight *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
             this.weights[x] = tmpWeight;
+            this.weights[x] = 0.5f;
         }
     }
 
@@ -47,7 +48,7 @@ class Neuron {
             for (int i = 0; i < inputs.length; i++) {
                 value += inputs[i].fire() * weights[i];
             }
-            value += bias;
+            //value += bias;
 
             switch (outputFunction){
                 case SOFTMAX:

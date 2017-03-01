@@ -31,7 +31,7 @@ public class GeneticNeuralNetwork {
             Neuron n;
             switch (gene.nodeType) {
                 case INPUT:
-                    n = new Neuron(gene.id, Neuron.OutputFunction.SOFTMAX, 0);
+                    n = new Neuron(gene.id, Neuron.OutputFunction.SIGMOID, 0);
                     inputNeurons.add(n);
                     neuronsMap.put(gene.id, n);
                     break;
@@ -41,7 +41,7 @@ public class GeneticNeuralNetwork {
                     neuronsMap.put(gene.id, n);
                     break;
                 case HIDDEN:
-                    n = new Neuron(gene.id, Neuron.OutputFunction.SOFTMAX, 0);
+                    n = new Neuron(gene.id, Neuron.OutputFunction.SIGMOID, 0);
                     hiddenNeurons.add(n);
                     neuronsMap.put(gene.id, n);
                     break;
@@ -52,7 +52,7 @@ public class GeneticNeuralNetwork {
             if (gene.enabled) {
                 Neuron n = neuronsMap.get(gene.outputId);
                 Neuron ni = neuronsMap.get(gene.inputId);
-                n.weights.add(gene.weight);
+                n.weights.put(gene.inputId, 0.5f); //gene.weight
                 n.inputs.add(ni);
                 ni.outputs.add(n);
             }

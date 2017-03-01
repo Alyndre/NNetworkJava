@@ -22,9 +22,11 @@ public class Main {
 
     public static void main(String[] args) {
 
-        startXORGANN();
-        //startXORMLP();
+        //startXORGANN();
+        startXORMLP();
         //startMnist();
+        System.out.println("------------------------------------------------------------------------");
+        startWorkingXORGANN();
     }
 
     private static void startXORGANN() {
@@ -35,11 +37,11 @@ public class Main {
 
         GeneticNeuralNetwork geneticNeuralNetwork = new GeneticNeuralNetwork(Genome.generateXORExampleGenome());
 
-        float momentum = 3.6f;
-        float learnRate = 0.5f;
+        float momentum = 1f;
+        float learnRate = 1f;
         Data data = new XORData();
 
-        Trainer trainer = new NNTrainer(geneticNeuralNetwork, learnRate, momentum, data, 500);
+        Trainer trainer = new NNTrainer(geneticNeuralNetwork, learnRate, momentum, data, 5000);
 
         trainer.start();
         try {
@@ -62,14 +64,14 @@ public class Main {
         int inputs = 2;
         int outputs = 2;
         int[] hidden = {4};
-        float momentum = 3.6f;
-        float learnRate = 0.5f;
+        float momentum = 1f;
+        float learnRate = 1f;
 
         Data data = new XORData();
 
         MultiLayerPerceptron network = new MultiLayerPerceptron(inputs, outputs, hidden);
         network.debug = false;
-        Trainer trainer = new MLPTrainer( network, learnRate, momentum, data, 500);
+        Trainer trainer = new MLPTrainer( network, learnRate, momentum, data, 5000);
 
         trainer.start();
         try {

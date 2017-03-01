@@ -38,7 +38,7 @@ public class MLPTrainer extends Trainer {
         this.multiLayerPerceptron.log("Training network...");
         try {
             for (int j = 0; j<iterations; j++) {
-                System.out.println("Epoch:" + j);
+                //System.out.println("Epoch:" + j);
                 for(int i = 0; i<data.getTotalData(); i++) {//data.getTotalData()
                     float[] d = data.getData()[i];
                     this.multiLayerPerceptron.log("Data: " + d[0] + " - " + d[1]);
@@ -97,8 +97,8 @@ public class MLPTrainer extends Trainer {
                 } else {
                     nextLayer = hiddenLayers.get(i+1);
                 }
-                for (int w = 0; w<nextLayer.length; w++){
-                    sumK += nextLayer[w].getDerivative() * nextLayer[w].weights[z];
+                for (Neuron o : nextLayer) {
+                    sumK += o.getDerivative() * o.weights[z];
                 }
                 float oJ = n.getOutput();
                 float derivativeJ = derivate(oJ) * sumK;

@@ -23,7 +23,7 @@ public class Population {
         for (Genome genome : genomes) {
             GeneticNeuralNetwork geneticNeuralNetwork = new GeneticNeuralNetwork(genome);
             float[] output = geneticNeuralNetwork.evaluate(data);
-            genome.fitness = fitness.fitness(output);
+            genome.fitness = fitness.fitness(output, output);
         }
         Collections.sort(genomes);
     }

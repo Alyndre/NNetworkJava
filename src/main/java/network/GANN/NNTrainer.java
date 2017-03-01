@@ -44,7 +44,7 @@ public class NNTrainer extends Trainer {
                 //data.shuffle();
                 long finishTime = new Date().getTime();
                 long time = finishTime - startTime;
-                System.out.println("Epoch num. " + (j+1) + " of " + iterations + " Completed in: " + time + " data processed: " + data.getTotalData());
+                //System.out.println("Epoch num. " + (j+1) + " of " + iterations + " Completed in: " + time + " data processed: " + data.getTotalData());
             }
         } catch (Exception e){
             this.geneticNeuralNetwork.log("Train error: " + e.getMessage());
@@ -83,9 +83,10 @@ public class NNTrainer extends Trainer {
         //Calc deltaWeight of outputLayer
         for (Neuron n : outputNeurons){
             List<Neuron> inputs = n.inputs;
-            for (int i = 0; i<inputs.size(); i++){
-                float deltaWeight = 1*learningRate*n.derivative*inputs.get(i).output;
-                n.weights.set(i, n.weights.get(i) + (deltaWeight * momentum));
+            for (Neuron ni : inputs) {
+                float deltaWeight = 1*learningRate*n.derivative*ni.output;
+                float lastWeight = n.weights.get(ni.id);
+                n.weights.put(ni.id, lastWeight + (deltaWeight*momentum));
             }
             float deltaBias = -1*learningRate*n.derivative;
             n.bias += deltaBias;
@@ -93,9 +94,10 @@ public class NNTrainer extends Trainer {
 
         for (Neuron n : hiddenNeurons) {
             List<Neuron> inputs = n.inputs;
-            for (int i = 0; i<inputs.size(); i++){
-                float deltaWeight = 1*learningRate*n.derivative*inputs.get(i).output;
-                n.weights.set(i, n.weights.get(i) + (deltaWeight * momentum));
+            for (Neuron ni : inputs) {
+                float deltaWeight = 1*learningRate*n.derivative*ni.output;
+                float lastWeight = n.weights.get(ni.id);
+                n.weights.put(ni.id, lastWeight + (deltaWeight*momentum));
             }
             float deltaBias = -1*learningRate*n.derivative;
             n.bias += deltaBias;
@@ -107,7 +109,7 @@ public class NNTrainer extends Trainer {
             Neuron n = neurons.get(x);
             float sumK = 0;
             for (Neuron no : n.outputs){
-                sumK += no.derivative * no.weights.get(x);
+                sumK += no.derivative * no.weights.get(n.id);
             }
             float output = n.output;
             n.derivative = derivate(output) * sumK;

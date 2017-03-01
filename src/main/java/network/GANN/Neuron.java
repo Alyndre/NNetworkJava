@@ -1,6 +1,7 @@
 package network.GANN;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 class Neuron {
@@ -8,7 +9,7 @@ class Neuron {
     int id = 0;
     List<Neuron> inputs;
     List<Neuron> outputs;
-    List<Float> weights;
+    HashMap<Integer, Float> weights;
     float bias;
     boolean fired;
     private float data;
@@ -17,7 +18,7 @@ class Neuron {
     private OutputFunction outputFunction;
 
     public enum OutputFunction {
-        SOFTMAX, HYPERTAN, NONE
+        SIGMOID, HYPERTAN, NONE
     }
 
     Neuron (int id, OutputFunction outputFunction, float bias) {
@@ -29,7 +30,7 @@ class Neuron {
         this.fired = false;
         this.inputs = new ArrayList<>();
         this.outputs = new ArrayList<>();
-        this.weights = new ArrayList<>();
+        this.weights = new HashMap<>();
         this.outputFunction = outputFunction;
     }
 
@@ -43,13 +44,16 @@ class Neuron {
         }
         if (inputs.size() > 0) {
             float value = 0;
-            for (int i = 0; i < inputs.size(); i++) {
-                value += inputs.get(i).fire() * weights.get(i);
+            for (Neuron ni : inputs) {
+                value += ni.fire() * weights.get(ni.id);
             }
-            value += bias;
+            /*for (int i = 0; i < inputs.size(); i++) {
+                value += inputs.get(i).fire() * weights.get(i);
+            }*/
+            //value += bias;
 
             switch (outputFunction){
-                case SOFTMAX:
+                case SIGMOID:
                     output = sigmoid(value);
                     break;
                 case HYPERTAN:
