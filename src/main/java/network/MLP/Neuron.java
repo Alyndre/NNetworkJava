@@ -42,13 +42,12 @@ class Neuron {
     float fire () {
         if (fired) {
             return output;
-        }
-        if (inputs.length > 0) {
+        } else if (inputs.length > 0) {
             float value = 0;
             for (int i = 0; i < inputs.length; i++) {
                 value += inputs[i].fire() * weights[i];
             }
-            //value += bias;
+            value += bias;
 
             switch (outputFunction){
                 case SOFTMAX:

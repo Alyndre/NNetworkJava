@@ -44,13 +44,12 @@ class Neuron {
         }
         if (inputs.size() > 0) {
             float value = 0;
+
             for (Neuron ni : inputs) {
                 value += ni.fire() * weights.get(ni.id);
             }
-            /*for (int i = 0; i < inputs.size(); i++) {
-                value += inputs.get(i).fire() * weights.get(i);
-            }*/
-            //value += bias;
+
+            value += bias;
 
             switch (outputFunction){
                 case SIGMOID:

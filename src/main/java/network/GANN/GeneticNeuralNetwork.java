@@ -41,7 +41,7 @@ public class GeneticNeuralNetwork {
                     neuronsMap.put(gene.id, n);
                     break;
                 case HIDDEN:
-                    n = new Neuron(gene.id, Neuron.OutputFunction.SIGMOID, 0);
+                    n = new Neuron(gene.id, Neuron.OutputFunction.SIGMOID, gene.bias);
                     hiddenNeurons.add(n);
                     neuronsMap.put(gene.id, n);
                     break;

@@ -113,7 +113,7 @@ public class MLPTrainer extends Trainer {
                 float deltaWeight = 1*learningRate*n.getDerivative()*inputs[i].getOutput();
                 n.weights[i] = n.weights[i] + (deltaWeight * momentum);
             }
-            float deltaBias = -1*learningRate*n.getDerivative();
+            float deltaBias = 1*learningRate*n.getDerivative();
             n.setBias(n.getBias()+deltaBias);
         }
 

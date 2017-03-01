@@ -44,13 +44,13 @@ public class Genome implements Comparable<Genome> {
         genome.nodeGenes.add(gene2);
 
         //Hidden genes
-        NodeGene gene3 = new NodeGene(3, 0, NodeGene.NodeType.HIDDEN);
+        NodeGene gene3 = new NodeGene(3, (float)Math.random(), NodeGene.NodeType.HIDDEN);
         genome.nodeGenes.add(gene3);
-        NodeGene gene4 = new NodeGene(4, 0, NodeGene.NodeType.HIDDEN);
+        NodeGene gene4 = new NodeGene(4, (float)Math.random(), NodeGene.NodeType.HIDDEN);
         genome.nodeGenes.add(gene4);
-        NodeGene gene5 = new NodeGene(5, 0, NodeGene.NodeType.HIDDEN);
+        NodeGene gene5 = new NodeGene(5, (float)Math.random(), NodeGene.NodeType.HIDDEN);
         genome.nodeGenes.add(gene5);
-        NodeGene gene6 = new NodeGene(6, 0, NodeGene.NodeType.HIDDEN);
+        NodeGene gene6 = new NodeGene(6, (float)Math.random(), NodeGene.NodeType.HIDDEN);
         genome.nodeGenes.add(gene6);
 
         //Output genes

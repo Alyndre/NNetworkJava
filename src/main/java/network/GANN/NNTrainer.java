@@ -66,18 +66,15 @@ public class NNTrainer extends Trainer {
         int x = 0;
         for (Neuron n : outputNeurons){
             float out = n.output;
-            float g = expected[x]-out;
             error -= expected[x] * Math.log(out);
-            n.derivative = g;
+            n.derivative = expected[x]-out;
             x++;
         }
 
         this.geneticNeuralNetwork.log("CROSS ENTROPY ERROR: " + error);
 
-
         for (Neuron n : outputNeurons){
-            List<Neuron> inputs = n.inputs;
-            calcDerivative(inputs);
+            calcDerivative(n.inputs);
         }
 
         //Calc deltaWeight of outputLayer
@@ -88,7 +85,7 @@ public class NNTrainer extends Trainer {
                 float lastWeight = n.weights.get(ni.id);
                 n.weights.put(ni.id, lastWeight + (deltaWeight*momentum));
             }
-            float deltaBias = -1*learningRate*n.derivative;
+            float deltaBias = 1*learningRate*n.derivative;
             n.bias += deltaBias;
         }
 
@@ -99,7 +96,7 @@ public class NNTrainer extends Trainer {
                 float lastWeight = n.weights.get(ni.id);
                 n.weights.put(ni.id, lastWeight + (deltaWeight*momentum));
             }
-            float deltaBias = -1*learningRate*n.derivative;
+            float deltaBias = 1*learningRate*n.derivative;
             n.bias += deltaBias;
         }
     }
