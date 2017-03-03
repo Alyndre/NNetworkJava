@@ -21,7 +21,6 @@ public class GeneticNeuralNetwork {
         log("Assembling network...");
 
         this.genome = genome;
-
         inputNeurons = new ArrayList<>();
         hiddenNeurons = new ArrayList<>();
         outputNeurons = new ArrayList<>();
@@ -52,7 +51,7 @@ public class GeneticNeuralNetwork {
             if (gene.enabled) {
                 Neuron n = neuronsMap.get(gene.outputId);
                 Neuron ni = neuronsMap.get(gene.inputId);
-                n.weights.put(gene.inputId, 0.5f); //gene.weight
+                n.weights.put(gene.inputId, gene.weight); //gene.weight
                 n.inputs.add(ni);
                 ni.outputs.add(n);
             }

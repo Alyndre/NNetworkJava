@@ -8,17 +8,24 @@ import java.util.List;
 
 public class Genome implements Comparable<Genome> {
 
+    private static int idCounter = 0;
+    public int id;
     public List<NodeGene> nodeGenes;
     public List<ConnectionGene> connectionGenes;
     public int fitness;
 
     public Genome(){
-        nodeGenes = new ArrayList<>();
-        connectionGenes = new ArrayList<>();
-        fitness = 0;
+        this.id = idCounter++;
+        this.nodeGenes = new ArrayList<>();
+        this.connectionGenes = new ArrayList<>();
+        this.fitness = 0;
     }
 
-    public static Genome generateRandomGenome(int inputs, int outputs) {
+    public void mutation() {
+        //TODO: Perform a mutation
+    }
+
+    public static Genome generateBasicGenome(int inputs, int outputs) {
         Genome genome = new Genome();
         //TODO: Generate a new random genome
         for (int i = 0; i<inputs; i++) {

@@ -5,6 +5,8 @@ import data.MnistData;
 import data.XORData;
 import genetics.Genome;
 import genetics.Population;
+import genetics.fitness.Fitness;
+import genetics.fitness.XORFitness;
 import genetics.genes.ConnectionGene;
 import genetics.genes.NodeGene;
 import network.GANN.GeneticNeuralNetwork;
@@ -23,14 +25,17 @@ public class Main {
     public static void main(String[] args) {
 
         //startXORGANN();
-        startXORMLP();
+        //startXORMLP();
         //startMnist();
-        System.out.println("------------------------------------------------------------------------");
-        startWorkingXORGANN();
+        //startWorkingXORGANN();
+        startXORGANN();
     }
 
     private static void startXORGANN() {
-        Population population = new Population(100);
+        Data data = new XORData();
+        Fitness fitness = new XORFitness(1000);
+        Population population = new Population(1);
+        population.evaluateCurrentPopulation(data, fitness);
     }
 
     private static void startWorkingXORGANN() {
