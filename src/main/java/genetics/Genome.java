@@ -23,6 +23,18 @@ public class Genome implements Comparable<Genome> {
 
     public void mutation() {
         //TODO: Perform a mutation
+        float mutation = (float) Math.random();
+        for (NodeGene g : nodeGenes) {
+            if (mutation<g.mutationRate) {
+                g.mutate();
+            }
+        }
+
+        for (ConnectionGene g : connectionGenes) {
+            if (mutation<g.mutationRate) {
+                g.mutate();
+            }
+        }
     }
 
     public static Genome generateBasicGenome(int inputs, int outputs) {
@@ -125,6 +137,6 @@ public class Genome implements Comparable<Genome> {
 
     @Override
     public int compareTo(Genome anotherGenome) {
-        return this.fitness - anotherGenome.fitness;
+        return anotherGenome.fitness - this.fitness;
     }
 }

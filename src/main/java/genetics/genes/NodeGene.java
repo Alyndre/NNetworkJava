@@ -11,8 +11,14 @@ public class NodeGene extends Gene {
     }
 
     public NodeGene(int id, float bias, NodeType nodeType) {
+        super();
         this.id = id;
         this.bias = bias;
         this.nodeType = nodeType;
+    }
+
+    @Override
+    public void mutate() {
+        this.bias += (Math.random() * this.bias/10) * Math.floor(Math.random()*2) == 1 ? 1 : -1;
     }
 }

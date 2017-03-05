@@ -9,6 +9,7 @@ public class ConnectionGene extends Gene {
     public boolean enabled;
 
     public ConnectionGene (int inputId, int outputId, float weight, int innovation, boolean enabled) {
+        super();
         this.inputId = inputId;
         this.outputId = outputId;
         this.weight = weight;
@@ -16,4 +17,8 @@ public class ConnectionGene extends Gene {
         this.enabled = enabled;
     }
 
+    @Override
+    public void mutate() {
+        this.weight += (Math.random() * this.weight/10) * Math.floor(Math.random()*2) == 1 ? 1 : -1;
+    }
 }

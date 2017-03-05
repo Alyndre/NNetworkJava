@@ -14,7 +14,6 @@ import network.GANN.NNTrainer;
 import network.MLP.MLPTrainer;
 import network.MLP.MultiLayerPerceptron;
 import network.Trainer;
-//import static spark.Spark.*;
 
 public class Main {
 
@@ -24,18 +23,32 @@ public class Main {
 
     public static void main(String[] args) {
 
-        //startXORGANN();
+        startXORGANN(); //Target fitness = 3996
         //startXORMLP();
         //startMnist();
         //startWorkingXORGANN();
-        startXORGANN();
     }
 
     private static void startXORGANN() {
         Data data = new XORData();
         Fitness fitness = new XORFitness(1000);
-        Population population = new Population(1);
-        population.evaluateCurrentPopulation(data, fitness);
+        Population population = new Population(100000, 100);
+        //TODO: CHANGE ITERATIONS TO FIND A CLOSEST SOLUTION
+        for (int i = 0; i<1000; i++) {
+            population.evaluateCurrentPopulation(data, fitness);
+            System.out.println("Generation " + i + " of 1000. Top fitness: " + population.genomes.get(0).fitness);
+        }
+
+        GeneticNeuralNetwork geneticNeuralNetwork = new GeneticNeuralNetwork(population.genomes.get(0));
+
+        int i = 0;
+        for (float[] d : data.getData()){
+            System.out.println(d[0]+","+d[1]);
+            float[] res = geneticNeuralNetwork.evaluate(d);
+            System.out.println("Expected: " + data.getExpected()[i][0] + " - " + data.getExpected()[i][1]);
+            System.out.println("Network eval: " + res[0] + " - " + res[1]);
+            i++;
+        }
     }
 
     private static void startWorkingXORGANN() {
@@ -54,15 +67,18 @@ public class Main {
         } catch (InterruptedException e){
             System.out.println("InterruptedException: " + e.getMessage());
         }
-
         int i = 0;
+        int fit = 0;
+        Fitness fitness = new XORFitness(1000);
         for (float[] d : data.getData()){
             System.out.println(d[0]+","+d[1]);
             float[] res = geneticNeuralNetwork.evaluate(d);
+            fit += fitness.fit(res, data.getExpected()[i]);
             System.out.println("Expected: " + data.getExpected()[i][0] + " - " + data.getExpected()[i][1]);
             System.out.println("Network eval: " + res[0] + " - " + res[1]);
             i++;
         }
+        System.out.println("Network Fitness = " + fit);
     }
 
     private static void startXORMLP() {
