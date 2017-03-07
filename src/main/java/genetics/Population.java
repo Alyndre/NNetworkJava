@@ -47,16 +47,17 @@ public class Population {
         Collections.shuffle(genomes);
         List<List<Genome>> tournaments = chopped(genomes, tournamentSize);
         List<Genome> parents = new ArrayList<>();
+
+        int sumParentsFitness = 0;
         for (List<Genome> t : tournaments){
             Collections.sort(t);
             parents.add(t.get(0));
             parents.add(t.get(1));
+            sumParentsFitness += (t.get(0).fitness + t.get(1).fitness);
         }
 
         //TODO: SELECT PARENTS BY % OF THEIR FITNESS
-        for (int i = 0; i<parents.size(); i++){
-            crossover(parents.get(i), parents.get(++i));
-        }
+
 
         Collections.sort(genomes);
 
