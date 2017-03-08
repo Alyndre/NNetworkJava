@@ -51,13 +51,13 @@ public class Population {
         int sumParentsFitness = 0;
         for (List<Genome> t : tournaments){
             Collections.sort(t);
+            crossover(t.get(0), t.get(1));
             parents.add(t.get(0));
-            parents.add(t.get(1));
-            sumParentsFitness += (t.get(0).fitness + t.get(1).fitness);
+            parents.add(t.get(1));/*
+            sumParentsFitness += (t.get(0).fitness + t.get(1).fitness);*/
         }
 
         //TODO: SELECT PARENTS BY % OF THEIR FITNESS
-
 
         Collections.sort(genomes);
 
