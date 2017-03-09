@@ -12,7 +12,7 @@ public class Genome implements Comparable<Genome> {
     public int id;
     public List<NodeGene> nodeGenes;
     public List<ConnectionGene> connectionGenes;
-    public int fitness;
+    public float fitness;
 
     public Genome(){
         this.id = idCounter++;
@@ -35,7 +35,7 @@ public class Genome implements Comparable<Genome> {
             if (mutation<g.mutationRate*g.innovation) {
                 g.mutate();
             } else {
-                g.innovation+=0.01;
+                //g.innovation+=0.01;
             }
         }
 
@@ -43,7 +43,7 @@ public class Genome implements Comparable<Genome> {
             if (mutation<g.mutationRate*g.innovation) {
                 g.mutate();
             } else {
-                g.innovation+=0.01;
+                //g.innovation+=0.01;
             }
         }
     }
@@ -148,6 +148,12 @@ public class Genome implements Comparable<Genome> {
 
     @Override
     public int compareTo(Genome anotherGenome) {
-        return anotherGenome.fitness - this.fitness;
+        int res = -1;
+        if (anotherGenome.fitness > this.fitness) {
+            res = 1;
+        } else if (anotherGenome.fitness == this.fitness){
+            res = 0;
+        }
+        return res;
     }
 }

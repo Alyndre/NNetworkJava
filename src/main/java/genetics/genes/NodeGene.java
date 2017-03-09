@@ -19,7 +19,7 @@ public class NodeGene extends Gene {
 
     @Override
     public void mutate() {
-        this.bias += (Math.random() * this.bias/5) * Math.floor(Math.random()*2) == 1 ? 1 : -1;
+        this.bias += (Math.random()*this.bias) * Math.floor(Math.random()*2) == 1 ? 1 : -1;
         this.innovation = 1;
     }
 }

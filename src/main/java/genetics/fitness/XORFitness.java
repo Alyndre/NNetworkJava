@@ -10,14 +10,14 @@ public class XORFitness extends Fitness {
     }
 
     @Override
-    public int fit(float[] output, float[] expected) {
-        int res = 0;
+    public float fit(float[] output, float[] expected) {
+        float res = 0;
 
         for (int i = 0; i<output.length; i++) {
             if (expected[i] == 0) {
-                res += (int) (output[i]*-precision);
+                res += (output[i]*-1);
             } else {
-                res += (int) (output[i]*precision);
+                res += (output[i]);
             }
         }
         return res;

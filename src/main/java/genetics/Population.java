@@ -17,9 +17,11 @@ public class Population {
     public List<Genome> genomes;
     private int tournamentSize;
     public Genome bestGenome;
+    public float crossoverRate;
 
     public Population(int size, int tournamentSize) {
         this.tournamentSize = tournamentSize;
+        this.crossoverRate = 0.7f;
         this.genomes = new ArrayList<>();
 
         for (int i = 0; i<size; i++) {
@@ -31,9 +33,7 @@ public class Population {
 
     public void evaluateCurrentPopulation(Data data, Fitness fitness) {
 
-        for (Genome g : genomes){
-            g.mutation();
-        }
+        //EVAL->HOLO->TOURNAMENT->BREED->MUTATION
 
         float[][] d = data.getData();
         float[][] e = data.getExpected();
@@ -51,17 +51,21 @@ public class Population {
         List<Genome> parents = new ArrayList<>();
 
         int sumParentsFitness = 0;
+        List<Genome> sons = new ArrayList<>();
         for (List<Genome> t : tournaments){
             Collections.sort(t);
-            if (Math.floor(Math.random()*2) == 1) {
-                crossover(t.get(0), t.get(1));
-            } else {
-                crossover(t.get(1), t.get(0));
-            }
 
-            parents.add(t.get(0));
-            parents.add(t.get(1));/*
-            sumParentsFitness += (t.get(0).fitness + t.get(1).fitness);*/
+            if (Math.random()<=crossoverRate) {
+                if (Math.floor(Math.random() * 2) == 1) {
+                    crossover(t.get(0), t.get(1), sons);
+                } else {
+                    crossover(t.get(1), t.get(0), sons);
+                }
+
+                parents.add(t.get(0));
+                parents.add(t.get(1));
+            }
+            /*sumParentsFitness += (t.get(0).fitness + t.get(1).fitness);*/
         }
 
         //TODO: SELECT PARENTS BY % OF THEIR FITNESS
@@ -69,12 +73,18 @@ public class Population {
         Collections.sort(genomes);
         holocaust(parents.size());
 
+        genomes.addAll(sons);
+
+        for (Genome g : genomes){
+            g.mutation();
+        }
+
         if (genomes.get(0).fitness > bestGenome.fitness) {
             bestGenome = new Genome(genomes.get(0));
         }
     }
 
-    private void crossover(Genome genome1, Genome genome2) {
+    private void crossover(Genome genome1, Genome genome2, List<Genome> sons) {
         Genome son = new Genome();
         Genome daughter = new Genome();
         Genome dad;
@@ -88,7 +98,7 @@ public class Population {
             mom = genome1;
         }
 
-        int totalFitness = dad.fitness + mom.fitness;
+        float totalFitness = dad.fitness + mom.fitness;
         //double prob1 = dad.fitness / totalFitness;
         if (totalFitness == 0){
             totalFitness = 1;
@@ -118,8 +128,8 @@ public class Population {
                 daughter.connectionGenes.add(gene1);
             }
         }
-        genomes.add(son);
-        genomes.add(daughter);
+        sons.add(son);
+        sons.add(daughter);
     }
 
     private void holocaust(int deaths) {

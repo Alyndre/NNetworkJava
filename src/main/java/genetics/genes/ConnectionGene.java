@@ -17,7 +17,7 @@ public class ConnectionGene extends Gene {
 
     @Override
     public void mutate() {
-        this.weight += (Math.random() * this.weight/10) * Math.floor(Math.random()*2) == 1 ? 1 : -1;
+        this.weight += (Math.random()*this.weight) * Math.floor(Math.random()*2) == 1 ? 1 : -1;
         this.innovation = 1;
     }
 }
