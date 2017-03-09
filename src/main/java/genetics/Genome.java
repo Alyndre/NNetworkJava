@@ -21,18 +21,29 @@ public class Genome implements Comparable<Genome> {
         this.fitness = 0;
     }
 
+    public Genome(Genome g){
+        this.id = g.id;
+        this.nodeGenes = g.nodeGenes;
+        this.connectionGenes = g.connectionGenes;
+        this.fitness = g.fitness;
+    }
+
     public void mutation() {
         //TODO: Perform a mutation
         float mutation = (float) Math.random();
         for (NodeGene g : nodeGenes) {
-            if (mutation<g.mutationRate) {
+            if (mutation<g.mutationRate*g.innovation) {
                 g.mutate();
+            } else {
+                g.innovation+=0.01;
             }
         }
 
         for (ConnectionGene g : connectionGenes) {
-            if (mutation<g.mutationRate) {
+            if (mutation<g.mutationRate*g.innovation) {
                 g.mutate();
+            } else {
+                g.innovation+=0.01;
             }
         }
     }
@@ -81,57 +92,57 @@ public class Genome implements Comparable<Genome> {
         //Connections genes
         float tmpWeight = (float) Math.random();
         tmpWeight *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
-        genome.connectionGenes.add(new ConnectionGene(1, 3, tmpWeight, 0, true));
+        genome.connectionGenes.add(new ConnectionGene(1, 3, tmpWeight, true));
         tmpWeight = (float) Math.random();
         tmpWeight *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
-        genome.connectionGenes.add(new ConnectionGene(1, 4, tmpWeight, 0, true));
+        genome.connectionGenes.add(new ConnectionGene(1, 4, tmpWeight, true));
         tmpWeight = (float) Math.random();
         tmpWeight *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
-        genome.connectionGenes.add(new ConnectionGene(1, 5, tmpWeight, 0, true));
+        genome.connectionGenes.add(new ConnectionGene(1, 5, tmpWeight, true));
         tmpWeight = (float) Math.random();
         tmpWeight *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
-        genome.connectionGenes.add(new ConnectionGene(1, 6, tmpWeight, 0, true));
+        genome.connectionGenes.add(new ConnectionGene(1, 6, tmpWeight, true));
 
         tmpWeight = (float) Math.random();
         tmpWeight *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
-        genome.connectionGenes.add(new ConnectionGene(2, 3, tmpWeight, 0, true));
+        genome.connectionGenes.add(new ConnectionGene(2, 3, tmpWeight, true));
         tmpWeight = (float) Math.random();
         tmpWeight *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
-        genome.connectionGenes.add(new ConnectionGene(2, 4, tmpWeight, 0, true));
+        genome.connectionGenes.add(new ConnectionGene(2, 4, tmpWeight, true));
         tmpWeight = (float) Math.random();
         tmpWeight *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
-        genome.connectionGenes.add(new ConnectionGene(2, 5, tmpWeight, 0, true));
+        genome.connectionGenes.add(new ConnectionGene(2, 5, tmpWeight, true));
         tmpWeight = (float) Math.random();
         tmpWeight *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
-        genome.connectionGenes.add(new ConnectionGene(2, 6, tmpWeight, 0, true));
+        genome.connectionGenes.add(new ConnectionGene(2, 6, tmpWeight, true));
 
         tmpWeight = (float) Math.random();
         tmpWeight *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
-        genome.connectionGenes.add(new ConnectionGene(3, 7, tmpWeight, 0, true));
+        genome.connectionGenes.add(new ConnectionGene(3, 7, tmpWeight, true));
         tmpWeight = (float) Math.random();
         tmpWeight *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
-        genome.connectionGenes.add(new ConnectionGene(3, 8, tmpWeight, 0, true));
+        genome.connectionGenes.add(new ConnectionGene(3, 8, tmpWeight, true));
 
         tmpWeight = (float) Math.random();
         tmpWeight *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
-        genome.connectionGenes.add(new ConnectionGene(4, 7, tmpWeight, 0, true));
+        genome.connectionGenes.add(new ConnectionGene(4, 7, tmpWeight, true));
         tmpWeight = (float) Math.random();
         tmpWeight *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
-        genome.connectionGenes.add(new ConnectionGene(4, 8, tmpWeight, 0, true));
+        genome.connectionGenes.add(new ConnectionGene(4, 8, tmpWeight, true));
 
         tmpWeight = (float) Math.random();
         tmpWeight *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
-        genome.connectionGenes.add(new ConnectionGene(5, 7, tmpWeight, 0, true));
+        genome.connectionGenes.add(new ConnectionGene(5, 7, tmpWeight, true));
         tmpWeight = (float) Math.random();
         tmpWeight *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
-        genome.connectionGenes.add(new ConnectionGene(5, 8, tmpWeight, 0, true));
+        genome.connectionGenes.add(new ConnectionGene(5, 8, tmpWeight, true));
 
         tmpWeight = (float) Math.random();
         tmpWeight *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
-        genome.connectionGenes.add(new ConnectionGene(6, 7, tmpWeight, 0, true));
+        genome.connectionGenes.add(new ConnectionGene(6, 7, tmpWeight, true));
         tmpWeight = (float) Math.random();
         tmpWeight *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
-        genome.connectionGenes.add(new ConnectionGene(6, 8, tmpWeight, 0, true));
+        genome.connectionGenes.add(new ConnectionGene(6, 8, tmpWeight, true));
         return genome;
     }
 
