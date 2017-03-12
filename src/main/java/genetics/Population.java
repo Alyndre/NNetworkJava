@@ -37,6 +37,7 @@ public class Population {
 
         float[][] d = data.getData();
         float[][] e = data.getExpected();
+        float totalFitness = 0;
         for (Genome genome : genomes) {
             GeneticNeuralNetwork geneticNeuralNetwork = new GeneticNeuralNetwork(genome);
             genome.fitness = 0;
@@ -44,31 +45,33 @@ public class Population {
                 float[] output = geneticNeuralNetwork.evaluate(d[i]);
                 genome.fitness += fitness.fit(output, e[i]);
             }
+            totalFitness += genome.fitness;
+        }
+
+        Collections.sort(genomes);
+
+        //Math.
+        for (int i = genomes.size()-1; i>=0; i--){
+            Genome g = genomes.get(i);
+            float prob = g.fitness/totalFitness;
+            //if (g.fitness*0)
         }
 
         Collections.shuffle(genomes);
         List<List<Genome>> tournaments = chopped(genomes, tournamentSize);
         List<Genome> parents = new ArrayList<>();
 
-        int sumParentsFitness = 0;
         List<Genome> sons = new ArrayList<>();
         for (List<Genome> t : tournaments){
             Collections.sort(t);
 
             if (Math.random()<=crossoverRate) {
-                if (Math.floor(Math.random() * 2) == 1) {
-                    crossover(t.get(0), t.get(1), sons);
-                } else {
-                    crossover(t.get(1), t.get(0), sons);
-                }
+                crossover(t.get(0), t.get(1), sons);
 
                 parents.add(t.get(0));
                 parents.add(t.get(1));
             }
-            /*sumParentsFitness += (t.get(0).fitness + t.get(1).fitness);*/
         }
-
-        //TODO: SELECT PARENTS BY % OF THEIR FITNESS
 
         Collections.sort(genomes);
         holocaust(parents.size());

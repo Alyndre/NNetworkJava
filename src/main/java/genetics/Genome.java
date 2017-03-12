@@ -29,21 +29,18 @@ public class Genome implements Comparable<Genome> {
     }
 
     public void mutation() {
-        //TODO: Perform a mutation
         float mutation = (float) Math.random();
         for (NodeGene g : nodeGenes) {
-            if (mutation<g.mutationRate*g.innovation) {
+            if (mutation<g.mutationRate) {
                 g.mutate();
-            } else {
-                //g.innovation+=0.01;
+                //break;
             }
         }
 
         for (ConnectionGene g : connectionGenes) {
-            if (mutation<g.mutationRate*g.innovation) {
+            if (mutation<g.mutationRate) {
                 g.mutate();
-            } else {
-                //g.innovation+=0.01;
+                //break;
             }
         }
     }

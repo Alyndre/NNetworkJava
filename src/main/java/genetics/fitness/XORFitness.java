@@ -2,11 +2,8 @@ package genetics.fitness;
 
 public class XORFitness extends Fitness {
 
-    private int precision;
-
-    public XORFitness(int precision) {
+    public XORFitness() {
         super();
-        this.precision = precision;
     }
 
     @Override
@@ -15,9 +12,9 @@ public class XORFitness extends Fitness {
 
         for (int i = 0; i<output.length; i++) {
             if (expected[i] == 0) {
-                res += (output[i]*-1);
+                res += 1-output[i];
             } else {
-                res += (output[i]);
+                res += output[i];
             }
         }
         return res;

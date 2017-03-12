@@ -23,7 +23,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        startXORGANN(); //Target fitness = 3996
+        startXORGANN(); //Target fitness = 8
         //startXORMLP();
         //startMnist();
         //startWorkingXORGANN();
@@ -31,15 +31,15 @@ public class Main {
 
     private static void startXORGANN() {
         Data data = new XORData();
-        Fitness fitness = new XORFitness(1);
-        Population population = new Population(10000, 10);
+        Fitness fitness = new XORFitness();
+        Population population = new Population(500, 150);
         //TODO: CHANGE ITERATIONS TO FIND A CLOSEST SOLUTION
         for (int i = 0; i<1000; i++) {
             population.evaluateCurrentPopulation(data, fitness);
             System.out.println("Generation " + i + " of 1000. Top fitness: " + population.genomes.get(0).fitness);
         }
 
-        GeneticNeuralNetwork geneticNeuralNetwork = new GeneticNeuralNetwork(population.genomes.get(0));
+        GeneticNeuralNetwork geneticNeuralNetwork = new GeneticNeuralNetwork(population.bestGenome);
 
         int i = 0;
         for (float[] d : data.getData()){
@@ -69,8 +69,8 @@ public class Main {
             System.out.println("InterruptedException: " + e.getMessage());
         }
         int i = 0;
-        int fit = 0;
-        Fitness fitness = new XORFitness(1000);
+        float fit = 0;
+        Fitness fitness = new XORFitness();
         for (float[] d : data.getData()){
             System.out.println(d[0]+","+d[1]);
             float[] res = geneticNeuralNetwork.evaluate(d);
