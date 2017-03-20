@@ -50,18 +50,38 @@ public class Population {
 
         Collections.sort(genomes);
 
-        //Math.
-        for (int i = genomes.size()-1; i>=0; i--){
-            Genome g = genomes.get(i);
-            float prob = g.fitness/totalFitness;
-            //if (g.fitness*0)
+        List<Genome> sons = new ArrayList<>();
+
+        int numParents = genomes.size()/10;
+        if (numParents%2!=0){
+            numParents--;
         }
 
+        holocaust(numParents);
+
+        for (int j = 0; j<numParents; j++) {
+            Genome[] parents = new Genome[2];
+            for (int x = 0; x < 2; x++) {
+                float cut = (float) Math.random();
+                for (int i = genomes.size() - 1; i >= 0; i--) {
+                    Genome g = genomes.get(i);
+                    float prob = g.fitness / totalFitness;
+                    if (cut <= prob) {
+                        parents[x] = g;
+                        break;
+                    }
+                }
+            }
+            crossover(parents[0], parents[1], sons);
+        }
+
+
+        //Collections.shuffle(parents);
+
+        /*
         Collections.shuffle(genomes);
         List<List<Genome>> tournaments = chopped(genomes, tournamentSize);
-        List<Genome> parents = new ArrayList<>();
 
-        List<Genome> sons = new ArrayList<>();
         for (List<Genome> t : tournaments){
             Collections.sort(t);
 
@@ -71,10 +91,10 @@ public class Population {
                 parents.add(t.get(0));
                 parents.add(t.get(1));
             }
-        }
+        }*/
 
         Collections.sort(genomes);
-        holocaust(parents.size());
+        //holocaust(parents.size());
 
         genomes.addAll(sons);
 

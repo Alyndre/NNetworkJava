@@ -33,14 +33,12 @@ public class Genome implements Comparable<Genome> {
         for (NodeGene g : nodeGenes) {
             if (mutation<g.mutationRate) {
                 g.mutate();
-                //break;
             }
         }
 
         for (ConnectionGene g : connectionGenes) {
             if (mutation<g.mutationRate) {
                 g.mutate();
-                //break;
             }
         }
     }

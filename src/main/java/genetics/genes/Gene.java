@@ -5,7 +5,7 @@ public abstract class Gene {
     public float mutationRate;
 
     public Gene() {
-        mutationRate = 0.01f;
+        mutationRate = (float) Math.random()/20; // 5% MAX
     }
 
     public abstract void mutate();
