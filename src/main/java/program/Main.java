@@ -32,7 +32,7 @@ public class Main {
     private static void startXORGANN() {
         Data data = new XORData();
         Fitness fitness = new XORFitness();
-        Population population = new Population(500, 150);
+        Population population = new Population(1000, 1);
         //TODO: CHANGE ITERATIONS TO FIND A CLOSEST SOLUTION
         for (int i = 0; i<1000; i++) {
             population.evaluateCurrentPopulation(data, fitness);

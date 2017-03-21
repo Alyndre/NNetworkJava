@@ -45,31 +45,37 @@ public class Population {
                 float[] output = geneticNeuralNetwork.evaluate(d[i]);
                 genome.fitness += fitness.fit(output, e[i]);
             }
-            totalFitness += genome.fitness;
         }
 
         Collections.sort(genomes);
 
         List<Genome> sons = new ArrayList<>();
 
-        int numParents = genomes.size()/10;
+        int numParents = genomes.size()/100;
         if (numParents%2!=0){
             numParents--;
         }
 
-        holocaust(numParents);
+        holocaust(numParents*2);
+
+        for (Genome g : genomes) {
+            totalFitness += g.fitness;
+        }
 
         for (int j = 0; j<numParents; j++) {
             Genome[] parents = new Genome[2];
             for (int x = 0; x < 2; x++) {
-                float cut = (float) Math.random();
-                for (int i = genomes.size() - 1; i >= 0; i--) {
-                    Genome g = genomes.get(i);
-                    float prob = g.fitness / totalFitness;
-                    if (cut <= prob) {
+                double p = Math.random();
+                double cumulativeProbability = 0.0;
+                for (Genome g : genomes) {
+                    cumulativeProbability += (g.fitness/totalFitness);
+                    if (p <= cumulativeProbability) {
                         parents[x] = g;
                         break;
                     }
+                }
+                if (parents[x] == null) {
+                    System.out.println("prob");
                 }
             }
             crossover(parents[0], parents[1], sons);
