@@ -32,7 +32,7 @@ public class Main {
     private static void startXORGANN() {
         Data data = new XORData();
         Fitness fitness = new XORFitness();
-        Population population = new Population(1000, 1);
+        Population population = new Population(10000, 1);
         //TODO: CHANGE ITERATIONS TO FIND A CLOSEST SOLUTION
         for (int i = 0; i<1000; i++) {
             population.evaluateCurrentPopulation(data, fitness);
@@ -42,13 +42,16 @@ public class Main {
         GeneticNeuralNetwork geneticNeuralNetwork = new GeneticNeuralNetwork(population.bestGenome);
 
         int i = 0;
+        float actualFitness = 0;
         for (float[] d : data.getData()){
             System.out.println(d[0]+","+d[1]);
             float[] res = geneticNeuralNetwork.evaluate(d);
             System.out.println("Expected: " + data.getExpected()[i][0] + " - " + data.getExpected()[i][1]);
             System.out.println("Network eval: " + res[0] + " - " + res[1]);
+            actualFitness += fitness.fit(res, data.getExpected()[i]);
             i++;
         }
+        System.out.println("Actual fitness: " + actualFitness);
         System.out.println("Best fitness: " + population.bestGenome.fitness);
     }
 

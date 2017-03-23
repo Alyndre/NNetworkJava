@@ -100,16 +100,15 @@ public class Population {
         }*/
 
         Collections.sort(genomes);
+        if (genomes.get(0).fitness > bestGenome.fitness) {
+            bestGenome = new Genome(genomes.get(0));
+        }
         //holocaust(parents.size());
 
         genomes.addAll(sons);
 
         for (Genome g : genomes){
             g.mutation();
-        }
-
-        if (genomes.get(0).fitness > bestGenome.fitness) {
-            bestGenome = new Genome(genomes.get(0));
         }
     }
 

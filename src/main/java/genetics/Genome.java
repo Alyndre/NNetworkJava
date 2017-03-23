@@ -23,8 +23,16 @@ public class Genome implements Comparable<Genome> {
 
     public Genome(Genome g){
         this.id = g.id;
-        this.nodeGenes = g.nodeGenes;
-        this.connectionGenes = g.connectionGenes;
+        this.nodeGenes = new ArrayList<>();
+        for (NodeGene gene : g.nodeGenes) {
+            NodeGene ng = new NodeGene(gene.id, gene.bias, gene.nodeType);
+            this.nodeGenes.add(ng);
+        }
+        this.connectionGenes = new ArrayList<>();
+        for (ConnectionGene gene : g.connectionGenes) {
+            ConnectionGene ng = new ConnectionGene(gene.inputId, gene.outputId, gene.weight, gene.enabled);
+            this.connectionGenes.add(ng);
+        }
         this.fitness = g.fitness;
     }
 
