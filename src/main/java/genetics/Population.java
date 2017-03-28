@@ -78,7 +78,9 @@ public class Population {
                     System.out.println("prob");
                 }
             }
-            crossover(parents[0], parents[1], sons);
+            if (parents[0] != null && parents[1] != null) {
+                crossover(parents[0], parents[1], sons);
+            }
         }
 
 
